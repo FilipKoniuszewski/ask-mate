@@ -1,0 +1,164 @@
+{% extends 'layout.html' %}
+{% block title %}Question{% endblock %}
+{% block content %}
+    <br><br><br><br>
+    <h1>{{question["title"]}}</h1>
+    <table class="styled-table">
+    <thead>
+        <tr>
+            <th>Description &nbsp &nbsp &nbsp &nbsp &nbsp&nbsp &nbsp
+                &nbsp &nbsp &nbsp&nbsp &nbsp &nbsp &nbsp &nbsp&nbsp
+                &nbsp &nbsp &nbsp &nbsp&nbsp &nbsp &nbsp &nbsp &nbsp
+                &nbsp &nbsp &nbsp &nbsp <a href="/question/{{question["id"]}}/new-tag" style="color:white;">add tags</a></th>
+        </tr>
+    </thead>
+    <tbody style="border-bottom: 2px solid #36475d;">
+        <tr>
+            <td>{{question["message"]}}</td>
+        </tr>
+    </tbody>
+    <tbody style="border-bottom: 1px solid #36475d;">
+        <tr>
+            <td>
+                <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                <span align="center" style="background-color:#333;font-size: small;">
+                <a class="button" href="/question/{{question["id"]}}/edit" style="background-color:#234c50;" target="_self" rel="nofollow noopener">edit
+                </a></span>
+                <span align="center" style="background-color:#333; font-size: small;">
+                <a class="button" href="/question/{{question["id"]}}/delete" style="background-color:#234c50;" target="_self" rel="nofollow noopener">delete
+                </a></span>
+                <span align="center" style="background-color:#333; font-size: small;">
+                <a class="button" href="/question/{{question["id"]}}/new_comment" style="background-color:#234c50;" target="_self" rel="nofollow noopener">comment
+                </a></span>
+                <i><a style="font-size:small;">&nbsp&nbsp<span class="font-right-color">{{question["submission_time"]}}</span></a></i>
+
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    {% if question["image"] != None%}
+        <img id="myImg" src="../static/{{ question["image"] }}" width="350"/>
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+            <div id="caption"></div>
+        </div>
+        <script>
+            var modal = document.getElementById('myModal');
+            var img = document.getElementById('myImg');
+            var modalImg = document.getElementById("img01");
+            var captionText = document.getElementById("caption");
+            img.onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            }
+            var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+        </script>
+    {% endif %}
+    {% set display_com_question={'display': False} %}
+    {% for element in comments %}
+        {% if element.question_id == question["id"]%} {% if display_com_question.update({'display': True}) %}{% endif %}{% endif %}
+    {% endfor %}
+    {% if display_com_question.display %}
+    <div class="comments">
+            <table class="comments">
+                <tr>
+                    <td class="comments">Comments:</td>
+                </tr>
+    {% for element in comments %}
+        {% if element.question_id == question["id"] %}
+                <tr>
+                    <td class="comments">{{element.message}}</td>
+                </tr>
+        {% endif %}
+    {% endfor %}
+            </table>
+    </div>
+    {% endif %}
+    <hr class="style1">
+    <br>
+    <span align="center" style="background-color:#333; font-size: medium;">
+        <a class="button" href='/question/{{question['id']}}/new-answer' style="background-color:#234c50;" target="_self" rel="nofollow noopener">New Answer</a>
+    </span>
+    {% for answer in answers %}
+        <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody style="border-bottom: 2px solid #36475d;">
+            <tr>
+                <td>{{answer["message"]}}</td>
+            </tr>
+        </tbody>
+        <tbody style="border-bottom: 1px solid #36475d;">
+            <tr>
+                <td>
+                    <a href="/answers/{{answer["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{answer["vote_number"]}}</span></a>
+                    <a href="/answers/{{answer["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                    <span align="center" style="background-color:#333; font-size: small;">
+                    <a class="button" href="/answer/{{answer["id"]}}/edit" style="background-color:#234c50;" target="_self" rel="nofollow noopener">edit
+                    </a></span>
+                    <span align="center" style="background-color:#333; font-size: small;">
+                    <a class="button" href="/answer/{{answer["id"]}}/delete" style="background-color:#234c50;" target="_self" rel="nofollow noopener">delete
+                    </a></span>
+                    <span align="center" style="background-color:#333; font-size: small;">
+                     <a class="button" href="/answer/{{answer["id"]}}//new_comment" style="background-color:#234c50;" target="_self" rel="nofollow noopener">comment
+                    </a></span>
+                    <i><a style="font-size:small;">&nbsp&nbsp<span class="font-right-color">{{(answer["submission_time"])}}</span></a></i>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        {% if answer["image"] != None%}
+            <img id="myImg1" src="../static/{{ answer["image"] }}" width="350"/>
+            <div id="myModal1" class="modal1">
+            <span class="close1">&times;</span>
+            <img class="modal-content1" id="img011">
+            <div id="caption1"></div>
+            </div>
+            <script>
+                var modal = document.getElementById('myModal1');
+                var img = document.getElementById('myImg1');
+                var modalImg = document.getElementById("img011");
+                var captionText = document.getElementById("caption1");
+                img.onclick = function(){
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                }
+                var span = document.getElementsByClassName("close1")[0];
+                span.onclick = function() {
+                 modal.style.display = "none";
+                }
+            </script>
+        {% endif %}
+        {% set display_com_answers={'display': False} %}
+        {% for element in comments %}
+        {% if element.answer_id == answer["id"]%} {% if display_com_answers.update({'display': True}) %}{% endif %}{% endif %}
+        {% endfor %}
+        {% if display_com_answers.display %}
+        <div class="comments">
+            <table class="comments">
+                <tr>
+                    <td class="comments" >Comments:</td>
+                </tr>
+        {% for element in comments %}
+            {% if element.answer_id == answer["id"] %}
+                <tr>
+                    <td class="comments">{{element.message}}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+        <hr class="style1">
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block title %}Add Question{% endblock %}
+{% block content %}
+    <br><br><br>
+    <table class="styled-title">
+        <thead>
+            <tr>
+                {%if question == None%}
+                    <th>New Question</th>
+                {%else:%}
+                    <th>Edit question</th>
+                {%endif%}
+            </tr>
+        </thead>
+    </table>
+<form {% if question==None %}action="/add-question"{% else: %}action="/question/{{ question["id"]}}/edit" {% endif %} method="POST" enctype="multipart/form-data">
+    <label for="question"></label><br>
+    <textarea id="question" name="title" rows="5" cols="51">{%if question!=None%}{{question["title"]}}{%endif%}</textarea><br><br>
+    <textarea id="question" name="message" rows="10" cols="51">{%if question!=None%}{{question["message"]}}{%endif%}</textarea><br><br>
+    <input type="file" name="image" value="{{ question["image"] }}"/><br><br>
+    <button type="Submit">Submit</button>
+
+</form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block title %}New-Answer{% endblock %}
+{% block content %}
+    <br><br><br>
+    <table class="styled-title">
+        <thead>
+            <tr>
+            {%if id == None%}
+                <th>New Answer</th>
+            {%else%}
+                <th>Edit Answer</th>
+            {%endif%}
+            </tr>
+        </thead>
+    </table>
+        <form {%if id == None%} action="/question/{{question_id}}/new-answer" method="POST" enctype="multipart/form-data" {%else%} action= "/answer/{{id}}/edit" method="POST" enctype="multipart/form-data"{%endif%}>
+            <label for="answer-input"></label><br>
+            <textarea id = 'user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
+            <input type="file" name="image" /><br><br>
+            <button type="Submit">{%if id == None %}Submit{%else:%}edit{%endif%}</button>
+        </form>
+{% endblock %}

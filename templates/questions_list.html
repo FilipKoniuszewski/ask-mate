@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block title %}Main Page{% endblock %}
+{% block content %}
+    <br><br><br>
+    <form action="/list">
+        <label for="order_by"><span class="title-of-question">sort:</span></label>
+        <select name="order_by" id="order_by">
+        <option value="title">by title</option>
+        <option value="submission_time">by time</option>
+        <option value="message">by message</option>
+        <option value="view_number">by views</option>
+        <option value="vote_number">by votes</option>
+        </select>&nbsp
+        <label for="order_direction"></label>
+        <select name="order_direction" id="order_direction">
+        <option value="asc">ascending</option>
+        <option value="desc">descending</option>
+        </select>&nbsp
+        <input type="submit" value="Apply">
+    </form>
+    <br>
+    {% for question in list %}
+        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]}}</a>&nbsp&nbsp
+                {% for element in tags %}
+                    {% if element.id == question.id %}
+                        {% for tag in element.tags %}
+                            <span class="tags"><a href="/">{{tag}}</a>&nbsp</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+        </h2>
+        <span class="info">{{question["submission_time"]}}</span>
+        <span class="info">Views:&nbsp{{question["view_number"]}}</span>
+        <span class="info">Votes:&nbsp{{question["vote_number"]}}</span>
+        <hr class="style1">
+    {% endfor %}
+{% endblock %}
+
+

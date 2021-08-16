@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block title %}New-Comment{% endblock %}
+{% block content %}
+    <br><br><br>
+    <table class="styled-title">
+        <thead>
+            <tr>
+                <th>New comment</th>
+            </tr>
+        </thead>
+    </table>
+        <form {%if question_id != None%} action="/question/{{question_id}}/new_comment" method="POST" {%else%} action= "/answer/{{answer_id}}/new_comment" method="POST" {%endif%}>
+            <label for="user-input"></label><br>
+            <textarea id = 'user_input' name="message" rows="3" cols="51"></textarea><br>
+            <button type="Submit">Submit</button>
+        </form>
+{% endblock %}

@@ -1,0 +1,13 @@
+table.comments, td.comments, th.comments {
+  background-color: #fff;
+  border-bottom: 1px solid #8c8b8b;
+  border-left: 4px dashed #8c8b8b;
+  text-align: left;
+  width: 20%;
+  overflow: hidden;
+  color: #36383f;
+}
+
+table.comments {
+  border-collapse: collapse;
+}

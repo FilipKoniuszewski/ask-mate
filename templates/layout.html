@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}-AskMate</title>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}/>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='navbar.css') }}/>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='comments.css') }}/>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='tag.css') }}/>
+</head>
+    <body>
+    <div class="headertype">
+        <header>
+            <a class="logo" href="/">ASK MATE</a>
+            <nav>
+                <ul class="nav__links">
+                    <li><a href="/list">All questions</a></li>
+                    <li><a href="/add-question">Add new</a></li>
+                    <li><form action="/searching">
+            <label for="phrase"></label>
+            <input id="phrase" type="text" name="phrase">
+            <button type="submit">Search</button>
+        </form></li>
+                </ul>
+            </nav>
+        </header>
+        </div>
+</body>
+<br>
+<div id="restpage">
+{% block content %}{% endblock %}
+</div>
+</html>
