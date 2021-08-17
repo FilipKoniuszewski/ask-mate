@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import data_manager
 import util
 
 app = Flask(__name__)
+app.secret_key = "GoodMorningVietnam"
 
 
 @app.route("/list", methods=["GET", "POST"])
@@ -210,6 +211,11 @@ def edit_comments_page(comment_id):
         return redirect('/')
     return render_template('add_question.html', edit_form=edit_form)
 
+
+@app.route("/logout")
+def logout():
+    session.pop("user",None)
+    return redirect('/')
 
 
 
