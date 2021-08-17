@@ -173,6 +173,33 @@ def add_tags(question_id):
     return render_template('add_tags.html', tags=tags, question_id=question_id)
 
 
+@app.route('/register', methods =['POST','GET'])
+def register():
+    if request.method == 'POST':
+        if not data_manager.check_if_user_in_database(request.form['email']):
+            email = request.form['email']
+            password = util.hidding_passwords(request.form['password'])
+            data_manager.save_user(email,password)
+            return redirect('/')
+        else:
+            return render_template('register.html', info="Sorry but that mail is already in use")
+    return render_template('register.html')
+
+
+
+@app.route('/login', methods =['POST','GET'])
+def login():
+    if request.method == 'POST':
+        if data_manager.check_if_user_in_database(request.form['email']):
+            email = request.form['email']
+            password = util.hidding_passwords(request.form['password'])
+            return redirect('/')
+        else:
+            return render_template('login.html',info="user with such e-mail does not exist")
+    return render_template('login.html')
+
+
+
 def edit_comments_page(comment_id):
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
@@ -180,6 +207,9 @@ def edit_comments_page(comment_id):
         data_manager.edit_comment(comment_id, message)
         return redirect('/')
     return render_template('add_question.html', edit_form=edit_form)
+
+
+
 
 
 if __name__ == "__main__":

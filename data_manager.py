@@ -286,6 +286,30 @@ def get_name_tags_of_specific_questions(cursor):
     return cursor.fetchall()
 
 
+@connection.connection_handler
+def check_if_user_in_database(cursor,email):
+    query = f""" SELECT * 
+                FROM users 
+                WHERE email = '{email}'
+    
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
+
+@connection.connection_handler
+def save_user(cursor, email, password):
+    query = f"""INSERT INTO users(email,password)
+                VALUES  ('{email}', '{password}')  
+    
+            """
+    return cursor.execute(query)
+
+
+
+
+
 
 
 
