@@ -191,9 +191,11 @@ def register():
 def login():
     if request.method == 'POST':
         if data_manager.check_if_user_in_database(request.form['email']):
-            email = request.form['email']
             password = util.hidding_passwords(request.form['password'])
-            return redirect('/')
+            if data_manager.check_password(request.form['email'],password):
+                return redirect('/')
+            else:
+                return render_template('login.html',info ="Your login or password is incorrect")
         else:
             return render_template('login.html',info="user with such e-mail does not exist")
     return render_template('login.html')

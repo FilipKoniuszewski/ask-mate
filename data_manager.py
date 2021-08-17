@@ -306,6 +306,16 @@ def save_user(cursor, email, password):
             """
     return cursor.execute(query)
 
+@connection.connection_handler
+def check_password(cursor,email,password):
+    query = f"""SELECT *
+                FROM users
+                WHERE email = '{email}' AND password = '{password}'
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
 
 
 
