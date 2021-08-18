@@ -2,7 +2,6 @@
 {% block title %}Main Page{% endblock %}
 {% block content %}
     <br><br><br>
-     {{ session['user'] }}
     <form action="/list">
         <label for="order_by"><span class="title-of-question">sort:</span></label>
         <select name="order_by" id="order_by">
@@ -21,7 +20,7 @@
     </form>
     <br>
     {% for question in list %}
-        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]|safe}}</a>&nbsp&nbsp
+        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]}}</a>&nbsp&nbsp
                 {% for element in tags %}
                     {% if element.id == question.id %}
                         {% for tag in element.tags %}

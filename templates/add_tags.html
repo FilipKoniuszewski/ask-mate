@@ -10,10 +10,10 @@
                 <form action="/question/{{question_id}}/new-tag" method="POST">
                 <label for="add-tag"></label>
                 <select name="add-tag" id="add-tag" onchange="createTag()">
-                <option value="create">Create tag</option>
                 {% for element in tags %}
                 <option value="{{element.id}}">{{element.name}}</option>
                 {% endfor %}
+                <option value="create">Create tag</option>
                 <input type="submit" value="Add">
                 </select>
                 </form>

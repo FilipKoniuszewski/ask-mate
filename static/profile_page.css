@@ -1,0 +1,27 @@
+*{ -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+.box {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    padding: 10px;
+}
+.box2 { background: rgba(35, 76, 80, 0.8); }
+.box3 { background: #24252a; }
+.box4 { background: rgba(35, 76, 80, 0.8); }
+.box5 { background: #24252a; }
+
+.container {
+    /*min-height: 100%;*/
+    display: flex;
+    /*flex-wrap: wrap;*/
+    flex-direction: row;
+}
+.box {
+    width: 33.33%
+}
+.box1 {
+    color: black;
+}
+
