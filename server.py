@@ -190,7 +190,7 @@ def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
             email = request.form['email']
-            password = util.hidding_passwords(request.form['password'])
+            password = util.hash_password(request.form['password'])
             data_manager.save_user(email,password)
             return redirect('/')
         else:
@@ -202,9 +202,14 @@ def register():
 def login():
     if request.method == 'POST':
         if data_manager.check_if_user_in_database(request.form['email']):
-            password = util.hidding_passwords(request.form['password'])
-            if data_manager.check_password(request.form['email'],password):
+            password = request.form['password']
+            saved_password = data_manager.get_password_by_email(request.form['email'])['password']
+            if util.verify_password(password,saved_password):
                 user = request.form['email']
+                username = user.split('@')
+                user_id = data_manager.find_user_id_by_email(user)
+                session['id'] = user_id['id']
+                session['username'] = username[0]
                 session['user'] = user
                 return redirect('/')
             else:
@@ -223,6 +228,12 @@ def edit_comments_page(comment_id):
         data_manager.edit_comment(comment_id, message)
         return redirect('/')
     return render_template('add_question.html', edit_form=edit_form)
+
+
+@app.route('/user/<user_id>', methods=["POST", "GET"])
+def users_page(user_id):
+    logged_user = data_manager.find_user(user_id)
+    return render_template('users_page.html', user=logged_user)
 
 
 @app.route("/logout")

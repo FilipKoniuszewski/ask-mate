@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <h1> REGISTRATION PAGE</h1>
+{% extends 'layout.html' %}
+{% block title %}REGISTER{% endblock %}
+{% block link %} <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='register_layout.css') }}/> {% endblock %}
+{% block content %}
 
-</head>
-<body>
-      <h3>{{info}}</h3>
- <form action = '/register' method = 'POST'>
-    <label for="email">Email :</label>
-    <input type="text" id="username" name="email"><br>
-    <label for="pass">Password (8 characters minimum):</label>
-    <input type="password" id="pass" name="password"
-           minlength="8" required><br>
-<input type="submit" value="Sign in">
- </form>
+  <br><br><br><br><br>
+ <h2>{{info}}</h2>
+ <div class='login-container'>
+    <div class='form'>
+    <form action = '/register' method = 'POST'>
+    <label for="email"></label>
+    <input type="text" id="username" name="email" placeholder="email"/>
+    <label for="pass"></label>
+    <input type='password' id="pass" name="password" minlength="8" required placeholder="password (min.8 chars)"/>
+    <input type='submit' value='register' />
+    </form>
+    <h2>or <a href='/login'>log in</a></h2>
+    </div>
+ </div>
+
+{% endblock %}

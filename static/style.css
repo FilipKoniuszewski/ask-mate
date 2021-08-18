@@ -243,3 +243,19 @@ hr.style2 {
 #highlight {
     background-color: yellow;
 }
+
+.question_table {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+
+

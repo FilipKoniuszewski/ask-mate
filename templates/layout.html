@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='navbar.css') }}/>
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='comments.css') }}/>
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='tag.css') }}/>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='profile_page.css') }}/>
+    {% block link %}{% endblock %}
 </head>
     <body>
     <div class="headertype">
@@ -14,19 +16,21 @@
             <a class="logo" href="/">ASK MATE</a>
             <nav>
                 <ul class="nav__links">
-
-                    <li>{{ user }}</li>
-                    <li>{{session['mail']}}</li>
-                    <li><a href="/logout">Logout</a></li>
-                    <li><a href="/register">Registration</a></li>
                     <li><a href="/list">All questions</a></li>
                     <li><a href="/add-question">Add new</a></li>
-                    <li><form action="/searching"></form>
+                    <li>
+                        <form action="/searching">
+                        <label for="phrase"></label>
+                        <input id="phrase" type="text" name="phrase">
+                        <button type="submit">Search</button>
+                        </form>
+                    </li>
+                    {% if "user" in session %}
+                        <li><a href="/user/{{session.id}}">{{session.username}}</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    {% else %}
                     <li><a href="/login">Login</a></li>
-            <label for="phrase"></label>
-            <input id="phrase" type="text" name="phrase">
-            <button type="submit">Search</button>
-        </form></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>

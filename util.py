@@ -1,6 +1,7 @@
 import datetime
 import time
 from werkzeug.utils import secure_filename
+import bcrypt
 
 
 def get_milliseconds_to_date(a):
@@ -31,22 +32,10 @@ def highlight(phrase, message):
 def delete_image(file):
     pass
 
-def hidding_passwords(password): ##### Działa ale zmień  !!!!
-    secret = ""
-    for x in range(len(password)):
-        numero = ord(password[x])
-        try:
-            if 0 < numero >= 10 :
-                numero = ord(password[x]) + 7
-            elif 10 < numero <= 30 :
-                numero = ord(password[x]) + 10
-            elif 30 < numero <= 70 :
-                numero = ord(password[x]) + 14
-            elif 70 < numero <= 120 :
-                numero = ord(password[x]) + 28
-            else:
-                numero = ord(password[x]) + 33
-        except:
-                numero = ord(password[x]) + 1
-        secret+= str(chr(numero))
-    return secret
+def hash_password(plain_text_password):
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'),hashed_bytes_password)
