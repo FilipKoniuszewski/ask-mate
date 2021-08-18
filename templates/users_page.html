@@ -1,0 +1,14 @@
+{%  extends 'layout.html' %}
+{% block title %}users-page{% endblock %}
+{% block content %}
+    <br><br><br>
+        {% for element in user %}
+            <div class = "container">
+            <div class = 'box box1'>PROFILE PAGE</div>
+            <div class = 'box box2'> USERNAME:</div>
+            <div class = 'box box3'>{{element['email']}}</div>
+            <div class = 'box box4'> REGISTER:</div>
+            <div class = 'box box5'>{{element['registration_date']}} </div>
+            </div>
+        {% endfor %}
+{% endblock %}
