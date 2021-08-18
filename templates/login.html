@@ -1,14 +1,21 @@
 {% extends 'layout.html' %}
 {% block title %}LOGIN{% endblock %}
+{% block link %} <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='register_layout.css') }}/> {% endblock %}
 {% block content %}
-    <br><br><br><br>
-    <h3>{{info}}</h3>
-    <h3> LOGIN </h3>
-        <form action = '/login' method = 'POST'>
-        <label for="email">Email :</label>
-        <input type="text" id="username" name="email"><br>
-        <label for="pass">Password :</label>
-        <input type="password" id="pass" name="password"><br>
-        <input type="submit" value="Sign in">
+
+    <br><br><br><br><br>
+ <h2>{{info}}</h2>
+ <div class='login-container'>
+    <div class='form'>
+    <form action = '/login' method = 'POST'>
+    <label for="email"></label>
+    <input type="text" id="username" name="email" placeholder="email"/>
+    <label for="pass"></label>
+    <input type='password' id="pass" name="password" placeholder="password (min.8 chars)"/>
+    <input type='submit' value='log in' />
     </form>
+    <h2>or <a href='/register'>sign up</a></h2>
+    </div>
+ </div>
+
 {% endblock %}
