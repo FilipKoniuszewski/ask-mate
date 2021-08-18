@@ -1,4 +1,3 @@
-import csv
 import psycopg2 as psycopg2
 import os
 

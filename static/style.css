@@ -229,6 +229,7 @@ hr.style1 {
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
+
 hr.style2 {
 	background-color: #fff;
 	border-top: 2px dashed #8c8b8b;
@@ -239,9 +240,6 @@ hr.style2 {
 
 }
 
-.highlight {
+#highlight {
     background-color: yellow;
 }
-
-
-

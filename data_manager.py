@@ -6,7 +6,7 @@ from psycopg2.extras import RealDictCursor
 
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
-    query = f"""
+    query = """
         SELECT id,submission_time, view_number, vote_number, title, message, image
         FROM question
     """
@@ -15,6 +15,7 @@ def get_questions(cursor, order, directions, limit=0):
         LIMIT {limit}"""
     elif order:
         query += f"ORDER BY {order} {directions}"
+
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -227,12 +228,18 @@ def search_for_phrase_in_questions(cursor, phrase):
 
 
 @connection.connection_handler
-def create_tag(cursor, name):
+def create_tag(cursor, tag_name, question_id):
     query = f"""
                 INSERT INTO tag(name)
-                VALUES ('{name}')
+                VALUES ('{tag_name}');
             """
-    cursor.execute(query)
+    tag_id = select_id_tag_by_name(tag_name)
+    if tag_id:
+        connect_tag_with_question(tag_id["id"], question_id)
+    else:
+        cursor.execute(query)
+        new_tag_id = select_id_tag_by_name(tag_name)
+        connect_tag_with_question(new_tag_id["id"], question_id)
 
 
 @connection.connection_handler
@@ -245,12 +252,10 @@ def connect_tag_with_question(cursor, tag_id, question_id):
 
 
 @connection.connection_handler
-def delete_tag(cursor, tag_id):
+def delete_tag(cursor, question_id, tag_id):
     query = f"""
-                DELETE FROM tag 
-                WHERE id = {tag_id};
                 DELETE FROM question_tag
-                WHERE tag_id = {tag_id}
+                WHERE tag_id = {tag_id} AND question_id = {question_id}
             """
     cursor.execute(query)
 
@@ -276,6 +281,15 @@ def select_tag_by_id(cursor, tag_id):
 
 
 @connection.connection_handler
+def select_id_tag_by_name(cursor, name):
+    query = f"""
+                SELECT id FROM tag WHERE name = '{name}'
+            """
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@connection.connection_handler
 def get_name_tags_of_specific_questions(cursor):
     query = """ SELECT q.id, ARRAY_AGG(t.name) tags
                 FROM question_tag qt
@@ -286,6 +300,11 @@ def get_name_tags_of_specific_questions(cursor):
     return cursor.fetchall()
 
 
-
-
-
+@connection.connection_handler
+def get_tags_by_quest_id(cursor, question_id):
+    query = f"""
+            SELECT * FROM tag t
+            LEFT JOIN question_tag qt ON t.id = qt.tag_id
+            WHERE qt.question_id = {question_id} """
+    cursor.execute(query)
+    return cursor.fetchall()

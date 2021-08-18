@@ -20,7 +20,7 @@
     </form>
     <br>
     {% for question in list %}
-        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]}}</a>&nbsp&nbsp
+        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]|safe}}</a>&nbsp&nbsp
                 {% for element in tags %}
                     {% if element.id == question.id %}
                         {% for tag in element.tags %}
@@ -29,7 +29,6 @@
                     {% endif %}
                 {% endfor %}
         </h2>
-        <span class="info">{{question["submission_time"]}}</span>
         <span class="info">Views:&nbsp{{question["view_number"]}}</span>
         <span class="info">Votes:&nbsp{{question["vote_number"]}}</span>
         <hr class="style1">
