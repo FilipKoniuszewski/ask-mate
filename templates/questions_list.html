@@ -2,6 +2,7 @@
 {% block title %}Main Page{% endblock %}
 {% block content %}
     <br><br><br>
+     {{ session['user'] }}
     <form action="/list">
         <label for="order_by"><span class="title-of-question">sort:</span></label>
         <select name="order_by" id="order_by">

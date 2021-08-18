@@ -14,10 +14,15 @@
             <a class="logo" href="/">ASK MATE</a>
             <nav>
                 <ul class="nav__links">
-                     <li><a href="/test">Add new2</a></li>
+
+                    <li>{{ user }}</li>
+                    <li>{{session['mail']}}</li>
+                    <li><a href="/logout">Logout</a></li>
+                    <li><a href="/register">Registration</a></li>
                     <li><a href="/list">All questions</a></li>
                     <li><a href="/add-question">Add new</a></li>
-                    <li><form action="/searching">
+                    <li><form action="/searching"></form>
+                    <li><a href="/login">Login</a></li>
             <label for="phrase"></label>
             <input id="phrase" type="text" name="phrase">
             <button type="submit">Search</button>

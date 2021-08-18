@@ -138,7 +138,7 @@ def edit_answer(cursor, message, image, answer_id):
 def delete_comments_by_id(cursor, comment_id):
     query = f"""
             DELETE FROM comment 
-            WHERE comment_id = {comment_id}
+            WHERE id = {comment_id}
             """
     cursor.execute(query)
 
@@ -178,8 +178,8 @@ def voting(cursor, table, rule, element_id):
 def edit_comment(cursor, comment_id, message):
     query = f"""
                 UPDATE comment
-                SET message = {message},submission_time = NOW(),edited_number = edited_number +1
-                WHERE comment_id = {comment_id}
+                SET message = {message},submission_time = NOW(), edited_count = edited_count +1
+                WHERE id = {comment_id}
             """
     cursor.execute(query)
 
@@ -189,7 +189,7 @@ def get_comment_by_id(cursor, comment_id):
     query = f"""
                 SELECT * 
                 FROM comment
-                WHERE comment_id = {comment_id} 
+                WHERE id = {comment_id} 
             """
     cursor.execute(query)
 
@@ -275,7 +275,7 @@ def select_tag_by_id(cursor, tag_id):
     query = f"""
                 SELECT *
                 FROM tag
-                WHERE tag_id={tag_id}
+                WHERE id={tag_id}
             """
     cursor.execute(query)
 
@@ -308,3 +308,34 @@ def get_tags_by_quest_id(cursor, question_id):
             WHERE qt.question_id = {question_id} """
     cursor.execute(query)
     return cursor.fetchall()
+
+
+def check_if_user_in_database(cursor, email):
+    query = f""" SELECT * 
+                FROM users 
+                WHERE email = '{email}'
+    
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
+
+@connection.connection_handler
+def save_user(cursor, email, password):
+    query = f"""INSERT INTO users(email,password)
+                VALUES  ('{email}', '{password}')  
+    
+            """
+    return cursor.execute(query)
+
+
+@connection.connection_handler
+def check_password(cursor, email, password):
+    query = f"""SELECT *
+                FROM users
+                WHERE email = '{email}' AND password = '{password}'
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
