@@ -194,6 +194,8 @@ def login():
         if data_manager.check_if_user_in_database(request.form['email']):
             password = util.hidding_passwords(request.form['password'])
             if data_manager.check_password(request.form['email'],password):
+                user = request.form['email']
+                session['user'] = user
                 return redirect('/')
             else:
                 return render_template('login.html',info ="Your login or password is incorrect")
@@ -204,6 +206,8 @@ def login():
 
 
 def edit_comments_page(comment_id):
+    if "user" in session:
+        user = session["email"]
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
         message = request.form['message']
