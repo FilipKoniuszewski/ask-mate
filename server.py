@@ -24,19 +24,22 @@ def all_questions():
 
 @app.route("/")
 def main_page():
-        mode = "submission_time"
-        order = "desc"
-        list_of_questions = data_manager.get_questions(mode, order, limit=5)
-        for element in list_of_questions:
-            element["submission_time"] = (str(element["submission_time"]))[:10]
-        tags = data_manager.get_name_tags_of_specific_questions()
-        return render_template("questions_list.html", list=list_of_questions, tags=tags)
+    mode = "submission_time"
+    order = "desc"
+    list_of_questions = data_manager.get_questions(mode, order, limit=5)
+    for element in list_of_questions:
+        element["submission_time"] = (str(element["submission_time"]))[:10]
+    tags = data_manager.get_name_tags_of_specific_questions()
+    return render_template("questions_list.html", list=list_of_questions, tags=tags)
 
 
 @app.route('/searching', methods=['GET', 'POST'])
 def search():
     phrase = request.args.get('phrase')
     list_of_questions_with_phrase = data_manager.search_for_phrase_in_questions(phrase)
+    for questions in list_of_questions_with_phrase:
+        questions["title"] = util.highlight(phrase, questions["title"])
+        questions["message"] = util.highlight(phrase, questions["message"])
     return render_template("questions_list.html", list=list_of_questions_with_phrase)
 
 
@@ -52,20 +55,20 @@ def add_question_page():
     return render_template("add_question.html", question=None)
 
 
-@app.route("/question/<string:question_id>/delete")
+@app.route("/question/<question_id>/delete")
 def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect(url_for("main_page"))
 
 
-@app.route("/answer/<string:answer_id>/delete")
+@app.route("/answer/<answer_id>/delete")
 def delete_answer(answer_id):
     answer = data_manager.get_answer_by_id(answer_id)
     data_manager.delete_answer(answer_id)
     return redirect(f"/question/{str(answer['question_id'])}")
 
 
-@app.route("/answer/<string:answer_id>/edit", methods=['POST', 'GET'])
+@app.route("/answer/<answer_id>/edit", methods=['POST', 'GET'])
 def edit_answer(answer_id):
     answer = data_manager.get_answer_by_id(answer_id)
     if request.method == 'POST':
@@ -77,8 +80,9 @@ def edit_answer(answer_id):
     return render_template('answer.html', id=answer_id, edit_form=answer)
 
 
-@app.route("/question/<string:question_id>", methods=["GET", 'POST'])
+@app.route("/question/<question_id>", methods=["GET", 'POST'])
 def question_page(question_id):
+    tags = data_manager.get_tags_by_quest_id(question_id)
     question = data_manager.get_question_by_id(question_id)
     question["submission_time"] = (str(question["submission_time"]))[:10]
     list_of_answers = data_manager.get_answers(question_id)
@@ -86,7 +90,8 @@ def question_page(question_id):
         element["submission_time"] = (str(element["submission_time"]))[:10]
     comments_to_question = data_manager.get_comments(question_id)
     data_manager.add_views(question_id)
-    return render_template("question.html", question=question, answers=list_of_answers, comments=comments_to_question)
+    return render_template("question.html", question=question, answers=list_of_answers, comments=comments_to_question,
+                           tags=tags)
 
 
 @app.route("/question/<int:question_id>/edit", methods=['POST', 'GET'])
@@ -155,13 +160,13 @@ def delete_comments(comment_id):
     return redirect('/')
 
 
-@app.route('/create-tag', methods=["POST", "GET"])
-def create_tag():
+@app.route('/<question_id>/create-tag', methods=["POST", "GET"])
+def create_tag(question_id):
     if request.method == "POST":
         tag_name = request.form["tag"]
-        data_manager.create_tag(tag_name)
-        return redirect('/')
-    return render_template('create_new_tag.html')
+        data_manager.create_tag(tag_name, question_id)
+        return redirect("/")
+    return render_template('create_new_tag.html', question_id=question_id)
 
 
 @app.route('/question/<question_id>/new-tag', methods=["POST", "GET"])
@@ -170,11 +175,17 @@ def add_tags(question_id):
     if request.method == "POST":
         tag_id = request.form["add-tag"]
         data_manager.connect_tag_with_question(tag_id, question_id)
-        return redirect("/")
+        return redirect(f"/question/{question_id}")
     return render_template('add_tags.html', tags=tags, question_id=question_id)
 
 
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/question/<question_id>/tag/<tag_id>/delete')
+def delete_tags(question_id, tag_id):
+    data_manager.delete_tag(question_id, tag_id)
+    return redirect(f"/question/{question_id}")
+
+
+@app.route('/register', methods =['POST','GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):

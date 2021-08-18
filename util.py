@@ -24,14 +24,8 @@ def un_inject_text(text):
     return text.replace("'", "\''")
 
 
-def highligth(phrase, message):
-    message = message.split(" ")
-    new_message = ""
-    for word in message:
-        if word in phrase:
-            new_message += f"<span id='highlight'>{word}</span>"
-        else:
-            new_message += word
+def highlight(phrase, message):
+    return message.replace(phrase, f"<span id='highlight'>{phrase}</span>")
 
 
 def delete_image(file):

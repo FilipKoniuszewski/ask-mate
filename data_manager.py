@@ -3,7 +3,7 @@ import connection
 
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
-    query = f"""
+    query = """
         SELECT id,submission_time, view_number, vote_number, title, message, image
         FROM question
     """
@@ -12,6 +12,7 @@ def get_questions(cursor, order, directions, limit=0):
         LIMIT {limit}"""
     elif order:
         query += f"ORDER BY {order} {directions}"
+
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -134,7 +135,7 @@ def edit_answer(cursor, message, image, answer_id):
 def delete_comments_by_id(cursor, comment_id):
     query = f"""
             DELETE FROM comment 
-            WHERE comment_id = {comment_id}
+            WHERE id = {comment_id}
             """
     cursor.execute(query)
 
@@ -174,8 +175,8 @@ def voting(cursor, table, rule, element_id):
 def edit_comment(cursor, comment_id, message):
     query = f"""
                 UPDATE comment
-                SET message = {message},submission_time = NOW(),edited_number = edited_number +1
-                WHERE comment_id = {comment_id}
+                SET message = {message},submission_time = NOW(), edited_count = edited_count +1
+                WHERE id = {comment_id}
             """
     cursor.execute(query)
 
@@ -185,7 +186,7 @@ def get_comment_by_id(cursor, comment_id):
     query = f"""
                 SELECT * 
                 FROM comment
-                WHERE comment_id = {comment_id} 
+                WHERE id = {comment_id} 
             """
     cursor.execute(query)
 
@@ -224,12 +225,18 @@ def search_for_phrase_in_questions(cursor, phrase):
 
 
 @connection.connection_handler
-def create_tag(cursor, name):
+def create_tag(cursor, tag_name, question_id):
     query = f"""
                 INSERT INTO tag(name)
-                VALUES ('{name}')
+                VALUES ('{tag_name}');
             """
-    cursor.execute(query)
+    tag_id = select_id_tag_by_name(tag_name)
+    if tag_id:
+        connect_tag_with_question(tag_id["id"], question_id)
+    else:
+        cursor.execute(query)
+        new_tag_id = select_id_tag_by_name(tag_name)
+        connect_tag_with_question(new_tag_id["id"], question_id)
 
 
 @connection.connection_handler
@@ -242,12 +249,10 @@ def connect_tag_with_question(cursor, tag_id, question_id):
 
 
 @connection.connection_handler
-def delete_tag(cursor, tag_id):
+def delete_tag(cursor, question_id, tag_id):
     query = f"""
-                DELETE FROM tag 
-                WHERE id = {tag_id};
                 DELETE FROM question_tag
-                WHERE tag_id = {tag_id}
+                WHERE tag_id = {tag_id} AND question_id = {question_id}
             """
     cursor.execute(query)
 
@@ -267,9 +272,18 @@ def select_tag_by_id(cursor, tag_id):
     query = f"""
                 SELECT *
                 FROM tag
-                WHERE tag_id={tag_id}
+                WHERE id={tag_id}
             """
     cursor.execute(query)
+
+
+@connection.connection_handler
+def select_id_tag_by_name(cursor, name):
+    query = f"""
+                SELECT id FROM tag WHERE name = '{name}'
+            """
+    cursor.execute(query)
+    return cursor.fetchone()
 
 
 @connection.connection_handler
@@ -279,6 +293,16 @@ def get_name_tags_of_specific_questions(cursor):
                 LEFT JOIN tag t ON qt.tag_id = t.id
                 LEFT JOIN question q ON qt.question_id = q.id
                 GROUP BY qt.question_id, q.id """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_tags_by_quest_id(cursor, question_id):
+    query = f"""
+            SELECT * FROM tag t
+            LEFT JOIN question_tag qt ON t.id = qt.tag_id
+            WHERE qt.question_id = {question_id} """
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -302,6 +326,7 @@ def save_user(cursor, email, password):
     
             """
     return cursor.execute(query)
+
 
 @connection.connection_handler
 def check_password(cursor, email, password):
@@ -332,11 +357,6 @@ def find_user(cursor, user_id):
             """
     cursor.execute(query)
     return cursor.fetchall()
-
-
-
-
-
 
 
 

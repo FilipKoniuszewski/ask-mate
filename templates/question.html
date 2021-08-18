@@ -2,7 +2,10 @@
 {% block title %}Question{% endblock %}
 {% block content %}
     <br><br><br><br>
-    <h1>{{question["title"]}}</h1>
+    <h1>{{question["title"]}}&nbsp
+     {% for tag in tags %}
+         <span class="tags"><a href="/">{{ tag.name }}</a></span><span id="X"><a href="/question/{{ question.id }}/tag/{{tag.id}}/delete">X</a>&nbsp</span>
+     {% endfor %}</h1>
     <table class="styled-table">
     <thead>
         <tr>
