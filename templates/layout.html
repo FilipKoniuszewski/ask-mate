@@ -15,8 +15,6 @@
             <a class="logo" href="/">ASK MATE</a>
             <nav>
                 <ul class="nav__links">
-                    <li><a href="/logout">Logout</a></li>
-                    <li><a href="/register">Registration</a></li>
                     <li><a href="/list">All questions</a></li>
                     <li><a href="/add-question">Add new</a></li>
                     <li>
@@ -26,7 +24,13 @@
                         <button type="submit">Search</button>
                         </form>
                     </li>
+                    {% if "user" in session %}
+                        <li><a href="/user/{{session.id}}">{{session.username}}</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    {% else %}
                     <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>

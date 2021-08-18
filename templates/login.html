@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <h1> LOGIN PAGE</h1>
-
-</head>
-<body>
-      <h3>{{info}}</h3>
- <form action = '/login' method = 'POST'>
-    <label for="email">Email :</label>
-    <input type="text" id="username" name="email"><br>
-    <label for="pass">Password :</label>
-    <input type="password" id="pass" name="password"><br>
-
-<input type="submit" value="Sign in">
- </form>
+{% extends 'layout.html' %}
+{% block title %}LOGIN{% endblock %}
+{% block content %}
+    <br><br><br><br>
+    <h3>{{info}}</h3>
+    <h3> LOGIN </h3>
+        <form action = '/login' method = 'POST'>
+        <label for="email">Email :</label>
+        <input type="text" id="username" name="email"><br>
+        <label for="pass">Password :</label>
+        <input type="password" id="pass" name="password"><br>
+        <input type="submit" value="Sign in">
+    </form>
+{% endblock %}

@@ -174,34 +174,42 @@ def add_tags(question_id):
     return render_template('add_tags.html', tags=tags, question_id=question_id)
 
 
-@app.route('/register', methods =['POST','GET'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
             email = request.form['email']
             password = util.hidding_passwords(request.form['password'])
-            data_manager.save_user(email,password)
+            data_manager.save_user(email, password)
             return redirect('/')
         else:
             return render_template('register.html', info="Sorry but that mail is already in use")
     return render_template('register.html')
 
 
-@app.route('/login', methods =['POST','GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         if data_manager.check_if_user_in_database(request.form['email']):
             password = util.hidding_passwords(request.form['password'])
-            if data_manager.check_password(request.form['email'],password):
+            if data_manager.check_password(request.form['email'], password):
+                user = request.form['email']
+                username = user.split('@')
+                user_id = data_manager.find_user_id_by_email(user)
+                session['id'] = user_id['id']
+                session['username'] = username[0]
+                session['user'] = user
                 return redirect('/')
             else:
-                return render_template('login.html',info ="Your login or password is incorrect")
+                return render_template('login.html', info="Your login or password is incorrect")
         else:
-            return render_template('login.html',info="user with such e-mail does not exist")
+            return render_template('login.html', info="user with such e-mail does not exist")
     return render_template('login.html')
 
 
 def edit_comments_page(comment_id):
+    if "user" in session:
+        user = session["email"]
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
         message = request.form['message']
@@ -218,7 +226,7 @@ def users_page(user_id):
 
 @app.route("/logout")
 def logout():
-    session.pop("user",None)
+    session.pop("user", None)
     return redirect('/')
 
 
