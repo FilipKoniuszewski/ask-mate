@@ -309,7 +309,7 @@ def get_tags_by_quest_id(cursor, question_id):
     cursor.execute(query)
     return cursor.fetchall()
 
-
+@connection.connection_handler
 def check_if_user_in_database(cursor, email):
     query = f""" SELECT * 
                 FROM users 
@@ -331,10 +331,10 @@ def save_user(cursor, email, password):
 
 
 @connection.connection_handler
-def check_password(cursor, email, password):
-    query = f"""SELECT *
+def get_password_by_email(cursor, email):
+    query = f"""SELECT password
                 FROM users
-                WHERE email = '{email}' AND password = '{password}'
+                WHERE email = '{email}' 
             """
     cursor.execute(query)
     result = cursor.fetchone()
