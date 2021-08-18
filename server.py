@@ -182,5 +182,14 @@ def edit_comments_page(comment_id):
     return render_template('add_question.html', edit_form=edit_form)
 
 
+@app.route('/user/<user_id>', methods=["POST", "GET"])
+def users_page(user_id):
+    logged_user = data_manager.find_user(user_id)
+    return render_template('users_page.html', user=logged_user)
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

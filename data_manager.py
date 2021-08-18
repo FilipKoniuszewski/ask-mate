@@ -1,7 +1,4 @@
 import connection
-from typing import List, Dict
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
 
 
 @connection.connection_handler
@@ -282,6 +279,16 @@ def get_name_tags_of_specific_questions(cursor):
                 LEFT JOIN tag t ON qt.tag_id = t.id
                 LEFT JOIN question q ON qt.question_id = q.id
                 GROUP BY qt.question_id, q.id """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def find_user(cursor, user_id):
+    query = f"""
+                SELECT * FROM users
+                WHERE users.id = {user_id}
+            """
     cursor.execute(query)
     return cursor.fetchall()
 
