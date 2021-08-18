@@ -293,6 +293,38 @@ def find_user(cursor, user_id):
     return cursor.fetchall()
 
 
+@connection.connection_handler
+def check_if_user_in_database(cursor,email):
+    query = f""" SELECT * 
+                FROM users 
+                WHERE email = '{email}'
+    
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
+
+@connection.connection_handler
+def save_user(cursor, email, password):
+    query = f"""INSERT INTO users(email,password)
+                VALUES  ('{email}', '{password}')  
+    
+            """
+    return cursor.execute(query)
+
+@connection.connection_handler
+def check_password(cursor,email,password):
+    query = f"""SELECT *
+                FROM users
+                WHERE email = '{email}' AND password = '{password}'
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
+
+
 
 
 

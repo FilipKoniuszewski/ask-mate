@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import data_manager
 import util
 
 app = Flask(__name__)
+app.secret_key = "GoodMorningVietnam"
 
 
 @app.route("/list", methods=["GET", "POST"])
@@ -173,6 +174,33 @@ def add_tags(question_id):
     return render_template('add_tags.html', tags=tags, question_id=question_id)
 
 
+@app.route('/register', methods =['POST','GET'])
+def register():
+    if request.method == 'POST':
+        if not data_manager.check_if_user_in_database(request.form['email']):
+            email = request.form['email']
+            password = util.hidding_passwords(request.form['password'])
+            data_manager.save_user(email,password)
+            return redirect('/')
+        else:
+            return render_template('register.html', info="Sorry but that mail is already in use")
+    return render_template('register.html')
+
+
+@app.route('/login', methods =['POST','GET'])
+def login():
+    if request.method == 'POST':
+        if data_manager.check_if_user_in_database(request.form['email']):
+            password = util.hidding_passwords(request.form['password'])
+            if data_manager.check_password(request.form['email'],password):
+                return redirect('/')
+            else:
+                return render_template('login.html',info ="Your login or password is incorrect")
+        else:
+            return render_template('login.html',info="user with such e-mail does not exist")
+    return render_template('login.html')
+
+
 def edit_comments_page(comment_id):
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
@@ -188,7 +216,10 @@ def users_page(user_id):
     return render_template('users_page.html', user=logged_user)
 
 
-
+@app.route("/logout")
+def logout():
+    session.pop("user",None)
+    return redirect('/')
 
 
 if __name__ == "__main__":
