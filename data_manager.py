@@ -15,19 +15,19 @@ def get_questions(cursor, order, directions, limit=0):
         LIMIT {limit}"""
     elif order:
         query += f"ORDER BY {order} {directions}"
-
     cursor.execute(query)
     return cursor.fetchall()
 
 
 @connection.connection_handler
 def get_question_by_id(cursor, question_id):
-    query = f"""
+    query = """
         SELECT id,submission_time, view_number,  vote_number, title, message, image
         FROM question
-        WHERE id = {question_id}
+        WHERE id = %(question_id)s
     """
-    cursor.execute(query)
+    arguments = {"question_id":question_id}
+    cursor.execute(query, arguments)
     return cursor.fetchone()
 
 
