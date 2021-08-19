@@ -2,13 +2,7 @@
 {% block title %}New-tag{% endblock %}
 {% block content %}
     <br><br><br>
-    <table class="styled-title">
-        <thead>
-            <tr>
-                <th>New tag</th>
-            </tr>
-        </thead>
-    </table>
+        <h2>New tag</h2>
         <form action="/{{question_id}}/create-tag" method="POST">
             <label for="tag"></label><br>
             <textarea id = 'tag' name="tag" rows="3" cols="51"></textarea><br>

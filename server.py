@@ -238,12 +238,19 @@ def edit_comments_page(comment_id):
 @app.route('/user/<user_id>', methods=["POST", "GET"])
 def users_page(user_id):
     logged_user = data_manager.find_user(user_id)
-    data_about_user = data_manager.number_of_questions_answers_comments(user_id)
+    num_of_questions = data_manager.number_of_questions(user_id)
+    num_of_answers = data_manager.number_of_answers(user_id)
+    num_of_comments = data_manager.number_of_comments(user_id)
     questions_posted_by_user = data_manager.get_questions_by_user_id(user_id)
     answers_posted_by_user = data_manager.get_answers_by_user_id(user_id)
     comments_posted_by_user = data_manager.get_comments_by_user_id(user_id)
-    return render_template('users_page.html', user=logged_user, data=data_about_user, questions=questions_posted_by_user,
-                           answers=answers_posted_by_user,comments=comments_posted_by_user )
+    return render_template('users_page.html', user=logged_user,
+                           num_questions=num_of_questions,
+                           num_answers=num_of_answers,
+                           num_comments=num_of_comments,
+                           questions=questions_posted_by_user,
+                           answers=answers_posted_by_user,
+                           comments=comments_posted_by_user)
 
 
 @app.route("/logout")
