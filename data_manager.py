@@ -5,7 +5,8 @@ import connection
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
     query = """
-        SELECT * FROM question
+        SELECT question.*, users.email FROM question
+        LEFT JOIN users on question.user_id = users.id
     """
     if limit != 0:
         query += f""" ORDER BY {order} {directions}
@@ -225,6 +226,18 @@ def add_views(cursor, question_id):
             """
     arguments = {'question_id': question_id}
     cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def get_comments(cursor, question_id):
+    query = f"""
+        SELECT comment.*, answer.question_id as answer_question_id, users.email
+        FROM comment LEFT JOIN answer ON comment.answer_id = answer.id 
+        LEFT JOIN users ON comment.user_id = users.id
+        WHERE comment.question_id = {question_id} or answer.question_id = {question_id}
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 # ogarnąć jak zabezpieczyc to gowno

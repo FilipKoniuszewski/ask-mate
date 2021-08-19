@@ -19,6 +19,8 @@ def all_questions():
         for element in list_of_questions:
             element["submission_time"] = (str(element["submission_time"]))[:10]
         tags = data_manager.get_name_tags_of_specific_questions()
+        for element in list_of_questions:
+            element['email'] = element['email'].split('@')[0]
         return render_template("main_page.html", list=list_of_questions, tags=tags)
 
 
@@ -27,6 +29,8 @@ def main_page():
     mode = "submission_time"
     order = "desc"
     list_of_questions = data_manager.get_questions(mode, order, limit=5)
+    for element in list_of_questions:
+        element['email'] = element['email'].split('@')[0]
     for element in list_of_questions:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     tags = data_manager.get_name_tags_of_specific_questions()
@@ -89,6 +93,8 @@ def question_page(question_id):
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     comments_to_question = data_manager.get_comments(question_id)
+    for element in comments_to_question:
+        element['email'] = element['email'].split('@')[0]
     data_manager.add_views(question_id)
     return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
                            tags=tags)
@@ -236,6 +242,7 @@ def users_page(user_id):
 
 @app.route("/logout")
 def logout():
+    session.pop("id", None)
     session.pop("user", None)
     return redirect('/')
 
