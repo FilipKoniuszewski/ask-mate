@@ -95,8 +95,8 @@
                 <tr>
                     <td class="comments">{{element.message}}<br><button type="button" class="btn btn-link">{{ element.email }}</button>
                         {% if session['id'] == element.user_id %}
-                            <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit">edit</a>
-                            </button><button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete'>delete</a></button>
+                            <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit" style="color:#337ab7;">edit</a></button>
+                            <button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete' style="color:#337ab7;">delete</a></button>
                         {% endif %}
                     </td>
                 </tr>
@@ -139,8 +139,8 @@
                     {% if session['id'] == answer.user_id %}
                     <button type="button" class='btn btn-default'><a href="/answer/{{answer["id"]}}/edit" target="_self" rel="nofollow noopener">edit</a></button>
                     <button type="button" class='btn btn-default'><a href="/answer/{{answer["id"]}}/delete" target="_self" rel="nofollow noopener">delete</a></button>
-                    <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
                     {% endif %}
+                    <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
                     {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>
@@ -185,7 +185,8 @@
                 <tr>
                     <td class="comments">{{element.message}}<button type="button" class="btn btn-link">{{ element.email }}</button>
                         {% if session['id'] == element.user_id %}
-                        <button type="button" class="btn btn-link">edit</button><button type="button" class="btn btn-link">delete</button>
+                        <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit" style="color:#337ab7;">edit</a></button>
+                        <button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete' style="color:#337ab7;">delete</a></button>
                         {% endif %}
                     </td>
                 </tr>

@@ -409,16 +409,6 @@ def number_of_questions_answers_comments(cursor, user_id):
 
 
 
-@connection.connection_handler
-def number_of_questions_answers_comments(cursor, user_id):
-    query = f"""SELECT count(question.id) as question, count(answer.id) as answer, count(comment.id) as comment
-                FROM question LEFT JOIN answer ON question.user_id = answer.user_id
-                LEFT JOIN comment ON question.user_id = comment.user_id
-                WHERE question.user_id = {user_id}
-    """
-    cursor.execute(query)
-    return cursor.fetchall()
-
 
 @connection.connection_handler
 def get_questions_by_user_id(cursor, user_id):
@@ -441,6 +431,36 @@ def get_answers_by_user_id(cursor, user_id):
 @connection.connection_handler
 def get_comments_by_user_id(cursor, user_id):
     query = f"""SELECT * FROM comment
+                WHERE comment.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_questions(cursor, user_id):
+    query = f"""SELECT count(question.id) as question
+                FROM question
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_answers(cursor, user_id):
+    query = f"""SELECT count(answer.id) as answer
+                FROM answer
+                WHERE answer.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_comments(cursor, user_id):
+    query = f"""SELECT count(comment.id) as comment
+                FROM comment
                 WHERE comment.user_id = {user_id}
     """
     cursor.execute(query)
