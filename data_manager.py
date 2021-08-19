@@ -1,6 +1,6 @@
 import connection
 
-
+#a
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
@@ -388,6 +388,7 @@ def find_user(cursor, user_id):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def get_list_of_users(cursor):
     query = f"""SELECT  email , registration_date,reputation
@@ -406,6 +407,44 @@ def number_of_questions_answers_comments(cursor, user_id):
     cursor.execute(query)
     return cursor.fetchall()
 
+
+
+@connection.connection_handler
+def number_of_questions_answers_comments(cursor, user_id):
+    query = f"""SELECT count(question.id) as question, count(answer.id) as answer, count(comment.id) as comment
+                FROM question LEFT JOIN answer ON question.user_id = answer.user_id
+                LEFT JOIN comment ON question.user_id = comment.user_id
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_questions_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM question
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_answers_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM answer
+                WHERE answer.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_comments_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM comment
+                WHERE comment.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 

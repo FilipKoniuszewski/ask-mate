@@ -191,7 +191,7 @@ def delete_tags(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/register', methods =['POST','GET'])
+@app.route('/register', methods =['POST', 'GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
@@ -224,20 +224,26 @@ def login():
             return render_template('login_page.html', info="user with such e-mail does not exist")
     return render_template('login_page.html')
 
+
 @app.route('/comments/<comment_id>/edit', methods=['POST','GET'])
 def edit_comments_page(comment_id):
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
         message = request.form['message']
         data_manager.edit_comment(comment_id, message)
-        return redirect('/')
+        return redirect(request.url)
     return render_template('comments_form.html', edit_form=edit_form,edit=True,comment_id = comment_id)
 
 
 @app.route('/user/<user_id>', methods=["POST", "GET"])
 def users_page(user_id):
     logged_user = data_manager.find_user(user_id)
-    return render_template('users_page.html', user=logged_user)
+    data_about_user = data_manager.number_of_questions_answers_comments(user_id)
+    questions_posted_by_user = data_manager.get_questions_by_user_id(user_id)
+    answers_posted_by_user = data_manager.get_answers_by_user_id(user_id)
+    comments_posted_by_user = data_manager.get_comments_by_user_id(user_id)
+    return render_template('users_page.html', user=logged_user, data=data_about_user, questions=questions_posted_by_user,
+                           answers=answers_posted_by_user,comments=comments_posted_by_user )
 
 
 @app.route("/logout")
@@ -245,6 +251,7 @@ def logout():
     session.pop("id", None)
     session.pop("user", None)
     return redirect('/')
+
 
 @app.route("/users")
 def print_users_list():

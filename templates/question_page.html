@@ -35,8 +35,16 @@
     <tbody style="border-bottom: 1px solid #36475d;">
         <tr>
             <td>
-                <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                {% if "user" in session %}
+                <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
+                {% endif %}
+                    <a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                {% if "user" not in session %}
+                    <a style="text-align:center;"><span class="font-right-color">votes</span></a>
+                {% endif %}
+                {% if "user" in session %}
                 <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                {% endif %}
                 {% if "user" in session %}
                 {% if session['id'] == question['user_id'] %}
                 <button type="button" class="btn btn-default"><a href="/question/{{question["id"]}}/edit" target="_self" rel="nofollow noopener">edit</a></button>
@@ -87,7 +95,8 @@
                 <tr>
                     <td class="comments">{{element.message}}<br><button type="button" class="btn btn-link">{{ element.email }}</button>
                         {% if session['id'] == element.user_id %}
-                    <button type="button" class="btn btn-link">edit</button><button type="button" class="btn btn-link">delete</button>
+                            <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit">edit</a>
+                            </button><button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete'>delete</a></button>
                         {% endif %}
                     </td>
                 </tr>
@@ -99,7 +108,7 @@
     <hr class="style1">
     <br>
     {% if "user" in session %}
-    <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">New Answer</a></button>
+    <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">Add answer</a></button>
     {% endif %}
     {% for answer in answers %}
         <table class="styled-table">
@@ -116,16 +125,22 @@
         <tbody style="border-bottom: 1px solid #36475d;">
             <tr>
                 <td>
-                    <a href="/answers/{{answer["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{answer["vote_number"]}}</span></a>
-                    <a href="/answers/{{answer["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                    {% if "user" in session %}
+                    <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
+                    {% endif %}
+                    <a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                    {% if "user" not in session %}
+                    <a style="text-align:center;"><span class="font-right-color">votes</span></a>
+                    {% endif %}
+                    {% if "user" in session %}
+                    <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                    {% endif %}
+                    {% if 'user' in session %}
                     {% if session['id'] == answer.user_id %}
-                    <a class="button" href="/answer/{{answer["id"]}}/edit" style="background-color:#234c50;" target="_self" rel="nofollow noopener">edit
-                    </a>
-                    <a class="button" href="/answer/{{answer["id"]}}/delete" style="background-color:#234c50;" target="_self" rel="nofollow noopener">delete
-                    </a>
-                    <span align="center" style="background-color:#333; font-size: small;">
-                     <a class="button" href="/answer/{{answer["id"]}}//new_comment" style="background-color:#234c50;" target="_self" rel="nofollow noopener">comment
-                    </a></span>
+                    <button type="button" class='btn btn-default'><a href="/answer/{{answer["id"]}}/edit" target="_self" rel="nofollow noopener">edit</a></button>
+                    <button type="button" class='btn btn-default'><a href="/answer/{{answer["id"]}}/delete" target="_self" rel="nofollow noopener">delete</a></button>
+                    <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
+                    {% endif %}
                     {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>

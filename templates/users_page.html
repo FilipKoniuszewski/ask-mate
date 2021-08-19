@@ -1,15 +1,108 @@
 {%  extends 'layout.html' %}
 {% block title %}users-page{% endblock %}
-{% block link %}<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='profile_page') }}/> {% endblock %}
+{% block link %}<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='user_page.css') }}/> {% endblock %}
 {% block content %}
     <br><br><br>
-        {% for element in user %}
-            <div class = "container">
-            <div class = 'box box1'>PROFILE PAGE</div>
-            <div class = 'box box2'> USERNAME:</div>
-            <div class = 'box box3'>{{element['email']}}</div>
-            <div class = 'box box4'> REGISTER:</div>
-            <div class = 'box box5'>{{element['registration_date']}} </div>
-            </div>
+    <h2>PROFILE PAGE</h2>
+    <div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+        <tr>
+            <th>PROFILE PAGE</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr>
+        <tr>
+            {% for element in user %}
+            <td>USERNAME</td>
+            <td>{{element.email}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in user %}
+            <td>REGISTRATION</td>
+            <td>{{element.registration_date}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>QUESTIONS</td>
+            <td>{{element.question}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>ANSWERS</td>
+            <td>{{element.answer}}</td>
+             {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>COMMENTS</td>
+            <td>{{element.comment}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>REPUTATION</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>QUESTION POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in questions%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.id}}">link</a></button></td>
+            <td>{{element.title}}</td>
+        </tr>
+
         {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>ANSWERS POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in answers%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.question_id}}">link</a></button></td>
+            <td>{{element.message}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>COMMENTS POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in comments%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.question_id}}">link</a></button></td>
+            <td>{{element.message}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    </div>
 {% endblock %}
