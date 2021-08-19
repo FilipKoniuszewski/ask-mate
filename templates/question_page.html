@@ -1,18 +1,34 @@
 {% extends 'layout.html' %}
 {% block title %}Question{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+{% endblock %}
 {% block content %}
     <br><br><br><br>
-    <h1>{{question["title"]}}&nbsp
+    <h1>{{question["title"]}}<br>&nbsp
      {% for tag in tags %}
-         <span class="tags"><a href="/">{{ tag.name }}</a></span><span id="X"><a href="/question/{{ question.id }}/tag/{{tag.id}}/delete">X</a>&nbsp</span>
-     {% endfor %}</h1>
+         <span class="tags"><a href="/">{{ tag.name }}</a></span>
+                {% if "user" in session %}
+                {% if session['id'] == question['user_id'] %}
+                <span id="X"><a href="/question/{{ question.id }}/tag/{{tag.id}}/delete">X</a>&nbsp</span>
+                {% endif %}
+                {% endif %}
+     {% endfor %}
+                {% if "user" in session %}
+                {% if session['id'] == question['user_id'] %}
+                    <span><sub><button type="button" class="btn btn-link"><a href="/question/{{question["id"]}}/new-tag" style="color:#337ab7;">add tags</a></button></sub></span>
+                {% endif %}
+                {% endif %}
+    </h1>
+{#                {% if "user" in session %}#}
+{#                {% if session['id'] == question['user_id'] %}#}
+{#                <span><a href="/question/{{question["id"]}}/new-tag" style="color:black;">add tags</a><span>#}
+{#                {% endif %}#}
+{#                {% endif %}#}
     <table class="styled-table">
     <thead>
         <tr>
-            <th>Description &nbsp &nbsp &nbsp &nbsp &nbsp&nbsp &nbsp
-                &nbsp &nbsp &nbsp&nbsp &nbsp &nbsp &nbsp &nbsp&nbsp
-                &nbsp &nbsp &nbsp &nbsp&nbsp &nbsp &nbsp &nbsp &nbsp
-                &nbsp &nbsp &nbsp &nbsp <a href="/question/{{question["id"]}}/new-tag" style="color:white;">add tags</a></th>
+            <th>Description</th>
         </tr>
     </thead>
     <tbody style="border-bottom: 2px solid #36475d;">
@@ -25,17 +41,14 @@
             <td>
                 <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
                 <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
-                <span align="center" style="background-color:#333;font-size: small;">
-                <a class="button" href="/question/{{question["id"]}}/edit" style="background-color:#234c50;" target="_self" rel="nofollow noopener">edit
-                </a></span>
-                <span align="center" style="background-color:#333; font-size: small;">
-                <a class="button" href="/question/{{question["id"]}}/delete" style="background-color:#234c50;" target="_self" rel="nofollow noopener">delete
-                </a></span>
-                <span align="center" style="background-color:#333; font-size: small;">
-                <a class="button" href="/question/{{question["id"]}}/new_comment" style="background-color:#234c50;" target="_self" rel="nofollow noopener">comment
-                </a></span>
-                <i><a style="font-size:small;">&nbsp&nbsp<span class="font-right-color">{{question["submission_time"]}}</span></a></i>
-
+                {% if "user" in session %}
+                {% if session['id'] == question['user_id'] %}
+                <button type="button" class="btn btn-default"><a href="/question/{{question["id"]}}/edit" target="_self" rel="nofollow noopener">edit</a></button>
+                <button type="button" class="btn btn-default"><a href="/question/{{question["id"]}}/delete" target="_self" rel="nofollow noopener">delete</a></button>
+                {% endif %}
+                <button type="button" class="btn btn-default"><a href="/question/{{question["id"]}}/new_comment" target="_self" rel="nofollow noopener">comment</a></button>
+                {% endif %}
+                <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{question["submission_time"]}}</span></a></i>
             </td>
         </tr>
     </tbody>
@@ -76,7 +89,11 @@
     {% for element in comments %}
         {% if element.question_id == question["id"] %}
                 <tr>
-                    <td class="comments">{{element.message}} - <div style="color:#0077cc">{{ element.email }}</div></td>
+                    <td class="comments">{{element.message}}<br><button type="button" class="btn btn-link">{{ element.email }}</button>
+                        {% if session['id'] == element.user_id %}
+                    <button type="button" class="btn btn-link">edit</button><button type="button" class="btn btn-link">delete</button>
+                        {% endif %}
+                    </td>
                 </tr>
         {% endif %}
     {% endfor %}
@@ -85,9 +102,9 @@
     {% endif %}
     <hr class="style1">
     <br>
-    <span align="center" style="background-color:#333; font-size: medium;">
-        <a class="button" href='/question/{{question['id']}}/new-answer' style="background-color:#234c50;" target="_self" rel="nofollow noopener">New Answer</a>
-    </span>
+    {% if "user" in session %}
+    <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">New Answer</a></button>
+    {% endif %}
     {% for answer in answers %}
         <table class="styled-table">
         <thead>
@@ -105,16 +122,16 @@
                 <td>
                     <a href="/answers/{{answer["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp<a style="text-align:center;"><span class="font-right-color">{{answer["vote_number"]}}</span></a>
                     <a href="/answers/{{answer["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
-                    <span align="center" style="background-color:#333; font-size: small;">
+                    {% if session['id'] == answer.user_id %}
                     <a class="button" href="/answer/{{answer["id"]}}/edit" style="background-color:#234c50;" target="_self" rel="nofollow noopener">edit
-                    </a></span>
-                    <span align="center" style="background-color:#333; font-size: small;">
+                    </a>
                     <a class="button" href="/answer/{{answer["id"]}}/delete" style="background-color:#234c50;" target="_self" rel="nofollow noopener">delete
-                    </a></span>
+                    </a>
                     <span align="center" style="background-color:#333; font-size: small;">
                      <a class="button" href="/answer/{{answer["id"]}}//new_comment" style="background-color:#234c50;" target="_self" rel="nofollow noopener">comment
                     </a></span>
-                    <i><a style="font-size:small;">&nbsp&nbsp<span class="font-right-color">{{(answer["submission_time"])}}</span></a></i>
+                    {% endif %}
+                    <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>
             </tr>
         </tbody>
@@ -155,7 +172,11 @@
         {% for element in comments %}
             {% if element.answer_id == answer["id"] %}
                 <tr>
-                    <td class="comments">{{element.message}}</td>
+                    <td class="comments">{{element.message}}<button type="button" class="btn btn-link">{{ element.email }}</button>
+                        {% if session['id'] == element.user_id %}
+                        <button type="button" class="btn btn-link">edit</button><button type="button" class="btn btn-link">delete</button>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}

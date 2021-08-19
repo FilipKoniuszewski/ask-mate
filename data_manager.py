@@ -1,163 +1,209 @@
 import connection
 
 
+# ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
     query = """
-        SELECT id,submission_time, view_number, vote_number, title, message, image
-        FROM question
+        SELECT question.*, users.email FROM question
+        LEFT JOIN users on question.user_id = users.id
     """
     if limit != 0:
         query += f""" ORDER BY {order} {directions}
         LIMIT {limit}"""
     elif order:
         query += f"ORDER BY {order} {directions}"
-
     cursor.execute(query)
     return cursor.fetchall()
 
 
 @connection.connection_handler
 def get_question_by_id(cursor, question_id):
-    query = f"""
-        SELECT id,submission_time, view_number,  vote_number, title, message, image
+    query = """
+        SELECT *
         FROM question
-        WHERE id = {question_id}
+        WHERE id = %(question_id)s
     """
-    cursor.execute(query)
+    arguments = {"question_id": question_id}
+    cursor.execute(query, arguments)
     return cursor.fetchone()
 
 
 @connection.connection_handler
-def add_question(cursor, title, message, image):
-    query = f"""
-        INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-        VALUES (NOW(), 0, 0, '{title}', '{message}',
+def add_question(cursor, title, message, image, user_id):
+    query = """
+        INSERT INTO question (submission_time, view_number, vote_number, title, message, user_id, image)
+        VALUES (NOW(), 0, 0, %(title)s, %(message)s, %(user_id)s,
         """
     if image == "":
         query += "null)"
     else:
-        query += f"'{image}')"
-
-    cursor.execute(query)
+        query += "%(image)s)"
+    arguments = {'title': title, 'message': message, 'image': image, 'user_id': user_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def delete_question(cursor, question_id):
-    query = f"""
+    query = """
             DELETE FROM comment
-            WHERE question_id = {question_id};
+            WHERE question_id = %(question_id)s;
             DELETE FROM answer
-            WHERE question_id = {question_id};
+            WHERE question_id = %(question_id)s;
             DELETE FROM question_tag
-            WHERE question_id = {question_id};
+            WHERE question_id = %(question_id)s;
             DELETE FROM question
-            WHERE id = {question_id}
+            WHERE id = %(question_id)s
         """
-    cursor.execute(query)
+    arguments = {'question_id': question_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def edit_question(cursor, title, message, image, question_id):
-    query = f"""
+    query = """
         UPDATE question SET
         submission_time = NOW(),
-        title = '{title}',
-        message = '{message}'
+        title = %(title)s,
+        message = %(message)s
     """
     if image != "":
-        query += f",image = '{image}'"
+        query += ",image = %(image)s"
     else:
-        query += f",image = null"
-    query += f" WHERE id = {question_id}"
-    cursor.execute(query)
+        query += ",image = null"
+    query += " WHERE id = %(question_id)s"
+    arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def get_answers(cursor, question_id):
-    query = f"""
-            SELECT id,submission_time, vote_number, question_id, message, image
+    query = """
+            SELECT *
             FROM answer
-            WHERE question_id = {question_id}
+            WHERE question_id=%(question_id)s
         """
-    cursor.execute(query)
+    arguments = {"question_id": question_id}
+    cursor.execute(query, arguments)
     return cursor.fetchall()
 
 
 @connection.connection_handler
 def get_answer_by_id(cursor, answer_id):
-    query = f"""
-        SELECT id,submission_time, vote_number, question_id, message, image
+    query = """
+        SELECT *
         FROM answer
-        WHERE id = {answer_id}
+        WHERE id = %(answer_id)s
     """
-    cursor.execute(query)
+    arguments = {"answer_id": answer_id}
+    cursor.execute(query, arguments)
     return cursor.fetchone()
 
 
 @connection.connection_handler
-def add_answer(cursor, question_id, message, image):
-    query = f"""
-        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-        VALUES (NOW(), 0, {question_id}, '{message}',"""
+def add_answer(cursor, question_id, message, image, user_id):
+    query = """
+        INSERT INTO answer (submission_time, vote_number, question_id, message, user_id, image)
+        VALUES (NOW(), 0, %(question_id)s, %(message)s, %(user_id)s"""
     if image == "":
-        query += "null)"
+        query += ",null)"
     else:
-        query += f"'{image}')"
-    cursor.execute(query)
+        query += ",%(image)s"
+    arguments = {'question_id': question_id, 'message': message, 'user_id': user_id, 'image': image}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def delete_answer(cursor, answer_id):
-    query = f"""
+    query = """
             DELETE FROM comment   
-            WHERE answer_id = {answer_id};
+            WHERE answer_id = %(answer_id)s;
             DELETE FROM answer 
-            WHERE id = {answer_id};
+            WHERE id = %(answer_id)s;
         """
-    cursor.execute(query)
+    arguments = {'answer_id': answer_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def edit_answer(cursor, message, image, answer_id):
-    query = f"""
+    query = """
         UPDATE answer SET
         submission_time = NOW(),
-        message = '{message}'
+        message = %(message)s
     """
     if image != "":
-        query += f",image = '{image}'"
-    query += f" WHERE id = {answer_id}"
-    cursor.execute(query)
+        query += ",image = %(image)s"
+    query += " WHERE id = %(answer_id)s"
+    arguments = {'message': message, 'image': image, 'answer_id': answer_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def get_comment_by_id(cursor, comment_id):
+    query = """
+                SELECT * 
+                FROM comment
+                WHERE id = %(comment_id)s 
+            """
+    arguments = {'comment_id': comment_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def get_comments(cursor, question_id):
+    query = """
+        SELECT comment.*, answer.question_id as answer_question_id
+        FROM comment LEFT JOIN answer ON comment.answer_id = answer.id
+        WHERE comment.question_id = %(question_id)s or answer.question_id = %(question_id)s
+        """
+    arguments = {'question_id': question_id}
+    cursor.execute(query, arguments)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def add_new_comment_answer(cursor, answer_id, message, user_id):
+    query = """  
+        INSERT INTO comment (submission_time,answer_id,message,edited_count, user_id)
+        VALUES (NOW(), %(answer_id)s, %(message)s,0, %(user_id)s)
+        """
+    arguments = {'answer_id': answer_id, 'message': message, 'user_id': user_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def add_new_comment_question(cursor, question_id, message, user_id):
+    query = """ 
+        INSERT INTO comment (submission_time,question_id,message,edited_count,user_id)
+        VALUES (NOW(), %(question_id)s, %(message)s,0, %(user_id)s)
+    """
+    arguments = {'question_id': question_id, 'message': message, 'user_id': user_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def delete_comments_by_id(cursor, comment_id):
-    query = f"""
+    query = """
             DELETE FROM comment 
-            WHERE id = {comment_id}
+            WHERE id = %(comment_id)s
             """
-    cursor.execute(query)
+    arguments = {'comment_id': comment_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
-def add_new_comment_answer(cursor, answer_id, message):
-    query = f"""  
-        INSERT INTO comment (submission_time,answer_id,message,edited_count)
-        VALUES (NOW(), {answer_id}, '{message}',0)
-        """
+def edit_comment(cursor, comment_id, message):
+    query = """
+                UPDATE comment
+                SET message = %(message)s,submission_time = NOW(), edited_count = edited_count +1
+                WHERE id = %(comment_id)s
+            """
+    arguments = {'comment_id': comment_id, 'message': message}
     cursor.execute(query)
 
 
-@connection.connection_handler
-def add_new_comment_question(cursor, question_id, message):
-    query = f""" 
-        INSERT INTO comment (submission_time,question_id,message,edited_count)
-        VALUES (NOW(),{question_id},'{message}',0) 
-    """
-    cursor.execute(query)
-
-
+# ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def voting(cursor, table, rule, element_id):
     query = f"""
@@ -172,33 +218,14 @@ def voting(cursor, table, rule, element_id):
 
 
 @connection.connection_handler
-def edit_comment(cursor, comment_id, message):
-    query = f"""
-                UPDATE comment
-                SET message = {message},submission_time = NOW(), edited_count = edited_count +1
-                WHERE id = {comment_id}
-            """
-    cursor.execute(query)
-
-
-@connection.connection_handler
-def get_comment_by_id(cursor, comment_id):
-    query = f"""
-                SELECT * 
-                FROM comment
-                WHERE id = {comment_id} 
-            """
-    cursor.execute(query)
-
-
-@connection.connection_handler
 def add_views(cursor, question_id):
     query = f"""
                 UPDATE question
                 SET view_number = view_number +1
-                WHERE id = {question_id}
+                WHERE id = %(question_id)s
             """
-    cursor.execute(query)
+    arguments = {'question_id': question_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
@@ -213,6 +240,7 @@ def get_comments(cursor, question_id):
     return cursor.fetchall()
 
 
+# ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def search_for_phrase_in_questions(cursor, phrase):
     query = f"""
@@ -227,26 +255,28 @@ def search_for_phrase_in_questions(cursor, phrase):
 
 @connection.connection_handler
 def create_tag(cursor, tag_name, question_id):
-    query = f"""
+    query = """
                 INSERT INTO tag(name)
-                VALUES ('{tag_name}');
+                VALUES (%(tag_name)s);
             """
+    arguments = {'tag_name': tag_name}
     tag_id = select_id_tag_by_name(tag_name)
     if tag_id:
         connect_tag_with_question(tag_id["id"], question_id)
     else:
-        cursor.execute(query)
+        cursor.execute(query, arguments)
         new_tag_id = select_id_tag_by_name(tag_name)
         connect_tag_with_question(new_tag_id["id"], question_id)
 
 
 @connection.connection_handler
 def connect_tag_with_question(cursor, tag_id, question_id):
-    query = f"""
+    query = """
                 INSERT INTO question_tag(question_id, tag_id)
-                VALUES ({question_id}, {tag_id})    
+                VALUES (%(question_id)s, %(tag_id)s)    
             """
-    cursor.execute(query)
+    arguments = {'tag_id': tag_id, 'question_id': question_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler

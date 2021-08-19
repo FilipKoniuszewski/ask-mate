@@ -1,4 +1,4 @@
 .idea/
-__pycache/__
+__pycache__/
 venv/
 sample_data/test.csv

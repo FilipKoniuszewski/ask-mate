@@ -214,6 +214,7 @@ hr.style2 {
 
 .font-right-color {
     color: #36383f;
+    background: white;
 
 }
 
@@ -224,6 +225,10 @@ hr.style2 {
 .question_table {
     display: flex;
     justify-content: center;
+}
+.delete-button {
+    background: grey;
+
 }
 
 

@@ -19,6 +19,8 @@ def all_questions():
         for element in list_of_questions:
             element["submission_time"] = (str(element["submission_time"]))[:10]
         tags = data_manager.get_name_tags_of_specific_questions()
+        for element in list_of_questions:
+            element['email'] = element['email'].split('@')[0]
         return render_template("main_page.html", list=list_of_questions, tags=tags)
 
 
@@ -27,6 +29,8 @@ def main_page():
     mode = "submission_time"
     order = "desc"
     list_of_questions = data_manager.get_questions(mode, order, limit=5)
+    for element in list_of_questions:
+        element['email'] = element['email'].split('@')[0]
     for element in list_of_questions:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     tags = data_manager.get_name_tags_of_specific_questions()
@@ -50,7 +54,7 @@ def add_question_page():
         message = request.form["message"]
         file = request.files['image']
         image = util.upload_image(file)
-        data_manager.add_question(util.un_inject_text(title), util.un_inject_text(message), image)
+        data_manager.add_question(util.un_inject_text(title), util.un_inject_text(message), image, session['id'])
         return redirect(url_for("main_page"))
     return render_template("add_question.html", question=None)
 
@@ -89,6 +93,8 @@ def question_page(question_id):
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     comments_to_question = data_manager.get_comments(question_id)
+    for element in comments_to_question:
+        element['email'] = element['email'].split('@')[0]
     data_manager.add_views(question_id)
     return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
                            tags=tags)
@@ -113,7 +119,7 @@ def answer_page(question_id):
         message = request.form['message']
         file = request.files['image']
         image = util.upload_image(file)
-        data_manager.add_answer(question_id, util.un_inject_text(message), image)
+        data_manager.add_answer(question_id, util.un_inject_text(message), image, session['id'])
         return redirect(f"/question/{str(question_id)}")
     return render_template('answer.html', id=None, question_id=question_id)
 
@@ -139,7 +145,7 @@ def vote_on_answers(answer_id):
 def new_comment_answer(answer_id):
     if request.method == 'POST':
         message = request.form['message']
-        data_manager.add_new_comment_answer(answer_id, message)
+        data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
     return render_template('comments_form.html', answer_id=answer_id, question_id=None)
@@ -149,7 +155,7 @@ def new_comment_answer(answer_id):
 def new_comment_question(question_id):
     if request.method == 'POST':
         message = request.form['message']
-        data_manager.add_new_comment_question(question_id, message)
+        data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
     return render_template('comments_form.html', question_id=question_id, answer_id=None)
 
@@ -238,6 +244,7 @@ def users_page(user_id):
 
 @app.route("/logout")
 def logout():
+    session.pop("id", None)
     session.pop("user", None)
     return redirect('/')
 
