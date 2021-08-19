@@ -50,7 +50,7 @@ def add_question_page():
         message = request.form["message"]
         file = request.files['image']
         image = util.upload_image(file)
-        data_manager.add_question(util.un_inject_text(title), util.un_inject_text(message), image)
+        data_manager.add_question(util.un_inject_text(title), util.un_inject_text(message), image, session['id'])
         return redirect(url_for("main_page"))
     return render_template("add_question.html", question=None)
 
@@ -113,7 +113,7 @@ def answer_page(question_id):
         message = request.form['message']
         file = request.files['image']
         image = util.upload_image(file)
-        data_manager.add_answer(question_id, util.un_inject_text(message), image)
+        data_manager.add_answer(question_id, util.un_inject_text(message), image, session['id'])
         return redirect(f"/question/{str(question_id)}")
     return render_template('answer.html', id=None, question_id=question_id)
 
@@ -139,7 +139,7 @@ def vote_on_answers(answer_id):
 def new_comment_answer(answer_id):
     if request.method == 'POST':
         message = request.form['message']
-        data_manager.add_new_comment_answer(answer_id, message)
+        data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
     return render_template('comments_form.html', answer_id=answer_id, question_id=None)
@@ -149,7 +149,7 @@ def new_comment_answer(answer_id):
 def new_comment_question(question_id):
     if request.method == 'POST':
         message = request.form['message']
-        data_manager.add_new_comment_question(question_id, message)
+        data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
     return render_template('comments_form.html', question_id=question_id, answer_id=None)
 
