@@ -391,7 +391,7 @@ def find_user(cursor, user_id):
 
 @connection.connection_handler
 def get_list_of_users(cursor):
-    query = f"""SELECT  email , registration_date,reputation
+    query = f"""SELECT  id, email , registration_date,reputation
                 FROM users
     """
     cursor.execute(query)
