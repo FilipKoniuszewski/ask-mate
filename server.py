@@ -239,7 +239,11 @@ def edit_comments_page(comment_id):
 def users_page(user_id):
     logged_user = data_manager.find_user(user_id)
     data_about_user = data_manager.number_of_questions_answers_comments(user_id)
-    return render_template('users_page.html', user=logged_user, data=data_about_user)
+    questions_posted_by_user = data_manager.get_questions_by_user_id(user_id)
+    answers_posted_by_user = data_manager.get_answers_by_user_id(user_id)
+    comments_posted_by_user = data_manager.get_comments_by_user_id(user_id)
+    return render_template('users_page.html', user=logged_user, data=data_about_user, questions=questions_posted_by_user,
+                           answers=answers_posted_by_user,comments=comments_posted_by_user )
 
 
 @app.route("/logout")

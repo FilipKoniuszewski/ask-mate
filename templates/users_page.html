@@ -44,10 +44,65 @@
             {% endfor %}
         </tr>
         <tr>
-            <th>REPUTATION</th>
-            <th>0</th>
+            <td>REPUTATION</td>
+            <td>0</td>
         </tr>
-        <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>QUESTION POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in questions%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.id}}">link</a></button></td>
+            <td>{{element.title}}</td>
+        </tr>
+
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>ANSWERS POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in answers%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.question_id}}">link</a></button></td>
+            <td>{{element.message}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <thead>
+        <tr>
+            <th>QUESTION</th>
+            <th>COMMENTS POSTED</th>
+        </tr>
+        </thead>
+        <tr>
+        {%for element in comments%}
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/question/{{element.question_id}}">link</a></button></td>
+            <td>{{element.message}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
     </table>
     </div>
 {% endblock %}

@@ -407,5 +407,32 @@ def number_of_questions_answers_comments(cursor, user_id):
     return cursor.fetchall()
 
 
+@connection.connection_handler
+def get_questions_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM question
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_answers_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM answer
+                WHERE answer.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_comments_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM comment
+                WHERE comment.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
 
 

@@ -108,7 +108,7 @@
     <hr class="style1">
     <br>
     {% if "user" in session %}
-    <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">New Answer</a></button>
+    <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">Add answer</a></button>
     {% endif %}
     {% for answer in answers %}
         <table class="styled-table">
