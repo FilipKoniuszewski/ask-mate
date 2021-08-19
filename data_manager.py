@@ -1,6 +1,6 @@
 import connection
 
-
+#a
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
