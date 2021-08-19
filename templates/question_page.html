@@ -77,6 +77,12 @@
         {% if element.question_id == question["id"] %}
                 <tr>
                     <td class="comments">{{element.message}}</td>
+                    <td>    <span align="center" style="background-color:#333; font-size: small;">
+                     <a class="button" href='/comments/{{element.id}}/edit' style="background-color:#234c50;" target="_self" rel="nofollow noopener">Edit
+                    </a></span></td>
+                    <td>    <span align="center" style="background-color:#333; font-size: small;">
+                     <a class="button" href='/comments/{{element.id}}/delete' style="background-color:#234c50;" target="_self" rel="nofollow noopener">Delete
+                    </a></span></td>
                 </tr>
         {% endif %}
     {% endfor %}
@@ -156,12 +162,12 @@
             {% if element.answer_id == answer["id"] %}
                 <tr>
                     <td class="comments">{{element.message}}</td>
+
                 </tr>
             {% endif %}
         {% endfor %}
             </table>
         </div>
         {% endif %}
-        <hr class="style1">
     {% endfor %}
 {% endblock %}

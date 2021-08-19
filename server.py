@@ -142,7 +142,7 @@ def new_comment_answer(answer_id):
         data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
-    return render_template('comments_form.html', answer_id=answer_id, question_id=None)
+    return render_template('comments_form.html', answer_id=answer_id, question_id=None,edit =False)
 
 
 @app.route('/question/<string:question_id>/new_comment', methods=['POST', 'GET'])
@@ -151,7 +151,7 @@ def new_comment_question(question_id):
         message = request.form['message']
         data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
-    return render_template('comments_form.html', question_id=question_id, answer_id=None)
+    return render_template('comments_form.html', question_id=question_id, answer_id=None,edit = False)
 
 
 @app.route('/comments/<comment_id>/delete')
@@ -218,16 +218,14 @@ def login():
             return render_template('login_page.html', info="user with such e-mail does not exist")
     return render_template('login_page.html')
 
-
+@app.route('/comments/<comment_id>/edit', methods=['POST','GET'])
 def edit_comments_page(comment_id):
-    if "user" in session:
-        user = session["email"]
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
         message = request.form['message']
         data_manager.edit_comment(comment_id, message)
         return redirect('/')
-    return render_template('add_question.html', edit_form=edit_form)
+    return render_template('comments_form.html', edit_form=edit_form,edit=True,comment_id = comment_id)
 
 
 @app.route('/user/<user_id>', methods=["POST", "GET"])
@@ -241,6 +239,9 @@ def logout():
     session.pop("user", None)
     return redirect('/')
 
+@app.route("/users")
+def print_users_list():
+    return render_template('users_page.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -199,7 +199,7 @@ def edit_comment(cursor, comment_id, message):
                 WHERE id = %(comment_id)s
             """
     arguments = {'comment_id': comment_id, 'message': message}
-    cursor.execute(query)
+    cursor.execute(query,arguments)
 
 
 # ogarnąć jak zabezpieczyc to gowno
@@ -374,6 +374,12 @@ def find_user(cursor, user_id):
             """
     cursor.execute(query)
     return cursor.fetchall()
+
+@connection.connection_handler
+def get_list_of_users(cursor):
+    query = f"""SELECT *
+                FROM users
+    """
 
 
 
