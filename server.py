@@ -248,7 +248,9 @@ def logout():
 
 @app.route("/users")
 def print_users_list():
-    return render_template('users_page.html')
+    users_form = data_manager.get_list_of_users()
+    print(users_form)
+    return render_template('users_list.html',users_form = users_form)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

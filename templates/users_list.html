@@ -10,6 +10,17 @@
     <title>Title</title>
 </head>
 <body>
+     <br><br><br>
+     <style> td, th { border: 1px solid black; } </style>
+        {% for element in users_form %}
+            <table>
+   <thead>
+      <tr> <th> Email <th> registration_date <th> reputation
+   <tbody>
+      <tr> <th> {{ element.email }}<td>{{ element.registration_date }} <td> {{ element.reputation }}
+</table>
+            <br>
+        {% endfor %}
 
 </body>
 </html>
