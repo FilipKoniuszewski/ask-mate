@@ -1,0 +1,15 @@
+.box {
+    display: flex;
+    padding: 10px;
+    flex-direction: row;
+}
+.questions-container {
+    display: flex;
+}
+.box5 {
+    text-align: center;
+}
+.box6 {
+    text-align: left;
+    width: 60vh;
+}
