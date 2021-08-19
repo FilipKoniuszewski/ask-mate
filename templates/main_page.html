@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block title %}Main Page{% endblock %}
+{% block link %} <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='main_page.css') }}/> {% endblock %}
 {% block content %}
     <br><br><br>
     <form action="/list">
@@ -20,7 +21,16 @@
     </form>
     <br>
     {% for question in list %}
-        <h2 class="title-of-question"><a href="/question/{{question["id"]}}" target="_self">{{question["title"]}}</a>&nbsp&nbsp
+        <div class = 'questions-container'>
+        <div class="box box5">
+        {{question["view_number"]}}<br>Views
+        <br><br>
+        {{question["vote_number"]}}<br>Votes
+        </div>
+        <div class = 'box box6'>
+        <h2><a href="/question/{{question["id"]}}" target="_self" style="color: #0077cc;font-size: large;">{{question["title"]}}</a>
+        <div style="font-size: small;color: #333">{{ question['message'] }}</div>
+        <br><br>
                 {% for element in tags %}
                     {% if element.id == question.id %}
                         {% for tag in element.tags %}
@@ -29,8 +39,8 @@
                     {% endif %}
                 {% endfor %}
         </h2>
-        <span class="info">Views:&nbsp{{question["view_number"]}}</span>
-        <span class="info">Votes:&nbsp{{question["vote_number"]}}</span>
+        </div>
+        </div>
         <hr class="style1">
     {% endfor %}
 {% endblock %}

@@ -19,7 +19,7 @@ def all_questions():
         for element in list_of_questions:
             element["submission_time"] = (str(element["submission_time"]))[:10]
         tags = data_manager.get_name_tags_of_specific_questions()
-        return render_template("questions_list.html", list=list_of_questions, tags=tags)
+        return render_template("main_page.html", list=list_of_questions, tags=tags)
 
 
 @app.route("/")
@@ -30,7 +30,7 @@ def main_page():
     for element in list_of_questions:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     tags = data_manager.get_name_tags_of_specific_questions()
-    return render_template("questions_list.html", list=list_of_questions, tags=tags)
+    return render_template("main_page.html", list=list_of_questions, tags=tags)
 
 
 @app.route('/searching', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def search():
     for questions in list_of_questions_with_phrase:
         questions["title"] = util.highlight(phrase, questions["title"])
         questions["message"] = util.highlight(phrase, questions["message"])
-    return render_template("questions_list.html", list=list_of_questions_with_phrase)
+    return render_template("main_page.html", list=list_of_questions_with_phrase)
 
 
 @app.route("/add-question", methods=["POST", "GET"])
@@ -90,7 +90,7 @@ def question_page(question_id):
         element["submission_time"] = (str(element["submission_time"]))[:10]
     comments_to_question = data_manager.get_comments(question_id)
     data_manager.add_views(question_id)
-    return render_template("question.html", question=question, answers=list_of_answers, comments=comments_to_question,
+    return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
                            tags=tags)
 
 
@@ -194,8 +194,8 @@ def register():
             data_manager.save_user(email,password)
             return redirect('/')
         else:
-            return render_template('register.html', info="Sorry but that mail is already in use")
-    return render_template('register.html')
+            return render_template('register_page.html', info="Sorry but that mail is already in use")
+    return render_template('register_page.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -213,10 +213,10 @@ def login():
                 session['user'] = user
                 return redirect('/')
             else:
-                return render_template('login.html', info="Your login or password is incorrect")
+                return render_template('login_page.html', info="Your login or password is incorrect")
         else:
-            return render_template('login.html', info="user with such e-mail does not exist")
-    return render_template('login.html')
+            return render_template('login_page.html', info="user with such e-mail does not exist")
+    return render_template('login_page.html')
 
 
 def edit_comments_page(comment_id):
