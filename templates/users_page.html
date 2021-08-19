@@ -1,15 +1,53 @@
 {%  extends 'layout.html' %}
 {% block title %}users-page{% endblock %}
-{% block link %}<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='profile_page') }}/> {% endblock %}
+{% block link %}<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='user_page.css') }}/> {% endblock %}
 {% block content %}
     <br><br><br>
-        {% for element in user %}
-            <div class = "container">
-            <div class = 'box box1'>PROFILE PAGE</div>
-            <div class = 'box box2'> USERNAME:</div>
-            <div class = 'box box3'>{{element['email']}}</div>
-            <div class = 'box box4'> REGISTER:</div>
-            <div class = 'box box5'>{{element['registration_date']}} </div>
-            </div>
-        {% endfor %}
+    <h2>PROFILE PAGE</h2>
+    <div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+        <tr>
+            <th>PROFILE PAGE</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr>
+        <tr>
+            {% for element in user %}
+            <td>USERNAME</td>
+            <td>{{element.email}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in user %}
+            <td>REGISTRATION</td>
+            <td>{{element.registration_date}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>QUESTIONS</td>
+            <td>{{element.question}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>ANSWERS</td>
+            <td>{{element.answer}}</td>
+             {% endfor %}
+        </tr>
+        <tr>
+            {% for element in data %}
+            <td>COMMENTS</td>
+            <td>{{element.comment}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>REPUTATION</th>
+            <th>0</th>
+        </tr>
+        <tbody>
+    </table>
+    </div>
 {% endblock %}
