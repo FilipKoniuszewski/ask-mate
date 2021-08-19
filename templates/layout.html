@@ -70,7 +70,9 @@ header {
                 <ul class="nav__links">
                     <li><a href="/list">All questions</a></li>
                     <li><a href="/add-question">Add new</a></li>
+                    {% if "user" in session %}
                     <li><a href="/users">Users</a></li>
+                    {% endif %}
                     <li>
                         <form action="/searching">
                         <label for="phrase"></label>
