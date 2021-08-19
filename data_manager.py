@@ -391,9 +391,22 @@ def find_user(cursor, user_id):
 
 @connection.connection_handler
 def get_list_of_users(cursor):
-    query = f"""SELECT *
+    query = f"""SELECT  email , registration_date,reputation
                 FROM users
     """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@connection.connection_handler
+def number_of_questions_answers_comments(cursor, user_id):
+    query = f"""SELECT count(question.id) as question, count(answer.id) as answer, count(comment.id) as comment
+                FROM question LEFT JOIN answer ON question.user_id = answer.user_id
+                LEFT JOIN comment ON question.user_id = comment.user_id
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 
 

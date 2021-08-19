@@ -9,7 +9,29 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
+     <br><br><br>
+     <style> td, th { border: 1px solid black;text-align:center }
+     table {
+                width: 70%;
+            }
+
+        th {
+                height: 60px;
+            }
+
+
+     </style>
+        {% for element in users_form %}
+            <table>
+   <thead>
+   <tr> <th> Email </th><th>registration_date </th><th>reputation</th>  <th> User questions </th><th>User answers </th> <th>User comments</th>
+   <tbody>
+            <tr> <th> {{ element.email }} </th><td>{{ element.registration_date }}</td> <td> {{ element.reputation }} <td> DUPA1  <td> DUPA2  <td> DUPA3
+</table>
+            <br>
+        {% endfor %}
 
 </body>
 </html>
