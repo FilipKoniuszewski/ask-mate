@@ -204,8 +204,9 @@ def add_views(cursor, question_id):
 @connection.connection_handler
 def get_comments(cursor, question_id):
     query = f"""
-        SELECT comment.*, answer.question_id as answer_question_id
-        FROM comment LEFT JOIN answer ON comment.answer_id = answer.id
+        SELECT comment.*, answer.question_id as answer_question_id, users.email
+        FROM comment LEFT JOIN answer ON comment.answer_id = answer.id 
+        LEFT JOIN users ON comment.user_id = users.id
         WHERE comment.question_id = {question_id} or answer.question_id = {question_id}
         """
     cursor.execute(query)

@@ -71,12 +71,12 @@
     <div class="comments">
             <table class="comments">
                 <tr>
-                    <td class="comments">Comments:</td>
+                    <td class="comments"><h3 style="color: #333;">Comments:</h3></td>
                 </tr>
     {% for element in comments %}
         {% if element.question_id == question["id"] %}
                 <tr>
-                    <td class="comments">{{element.message}}</td>
+                    <td class="comments">{{element.message}} - <div style="color:#0077cc">{{ element.email }}</div></td>
                 </tr>
         {% endif %}
     {% endfor %}
