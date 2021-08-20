@@ -272,6 +272,12 @@ def print_users_list():
         element['num_of_comments'] = num_of_comments
     return render_template('users_list.html', users_form=users_form)
 
+@app.route("/print_tags")
+def print_tags():
+    tag_table = data_manager.get_list_of_tags()
+    return render_template('tags_pages.html',tag_table = tag_table)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

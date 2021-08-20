@@ -10,6 +10,6 @@
         <form {%if question_id != None and edit == false %} action="/question/{{question_id}}/new_comment" method="POST" {%elif answer_id !=None and edit== false%} action= "/answer/{{answer_id}}/new_comment" method="POST"{% else %}action="/comments/{{comment_id}}/edit" method="POST" {%endif%}>
             <label for="user-input"></label><br>
             <textarea id = 'user_input' name="message" rows="3" cols="51">{% if comment_id == None %}{{edit_form['message']}}{% endif %}</textarea><br>
-            <button type="Submit">Submit</button>
+            <button type="Submit" style="color:black">Submit</button>
         </form>
 {% endblock %}
