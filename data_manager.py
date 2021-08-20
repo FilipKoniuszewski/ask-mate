@@ -1,7 +1,6 @@
 import connection
 
-#a
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
     query = """
@@ -203,7 +202,7 @@ def edit_comment(cursor, comment_id, message):
     cursor.execute(query,arguments)
 
 
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
 def voting(cursor, table, rule, element_id):
     query = f"""
@@ -240,7 +239,7 @@ def get_comments(cursor, question_id):
     return cursor.fetchall()
 
 
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
 def search_for_phrase_in_questions(cursor, phrase):
     query = f"""
