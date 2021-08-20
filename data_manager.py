@@ -327,6 +327,16 @@ def get_name_tags_of_specific_questions(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+@connection.connection_handler
+def get_list_of_tags(cursor):
+    query = f"""SELECT name,COUNT(*) AS number_of_questions
+                FROM tag
+                LEFT JOIN question_tag ON question_tag.tag_id = tag.id
+                GROUP By id
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 @connection.connection_handler
 def get_tags_by_quest_id(cursor, question_id):
