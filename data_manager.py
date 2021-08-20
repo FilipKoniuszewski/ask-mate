@@ -32,8 +32,7 @@ def get_question_by_id(cursor, question_id):
 def add_question(cursor, title, message, image, user_id):
     query = """
         INSERT INTO question (submission_time, view_number, vote_number, title, message, user_id, image)
-        VALUES (NOW(), 0, 0, %(title)s, %(message)s, %(user_id)s,
-        """
+        VALUES (NOW(), 0, 0, %(title)s, %(message)s, %(user_id)s,"""
     if image == "":
         query += "null)"
     else:
@@ -55,6 +54,23 @@ def delete_question(cursor, question_id):
             WHERE id = %(question_id)s
         """
     arguments = {'question_id': question_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def edit_question(cursor, title, message, image, question_id):
+    query = """
+        UPDATE question SET
+        submission_time = NOW(),
+        title = %(title)s,
+        message = %(message)s
+    """
+    if image != "":
+        query += ",image = %(image)s"
+    else:
+        query += ",image = null"
+    query += " WHERE id = %(question_id)s"
+    arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
     cursor.execute(query, arguments)
 
 
@@ -139,6 +155,38 @@ def edit_answer(cursor, message, image, answer_id):
 
 
 @connection.connection_handler
+def edit_answer(cursor, message, image, answer_id):
+    query = """
+        UPDATE answer SET
+        submission_time = NOW(),
+        message = %(message)s
+    """
+    if image != "":
+        query += ",image = %(image)s"
+    query += " WHERE id = %(answer_id)s"
+    arguments = {'message': message, 'image': image, 'answer_id': answer_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def accept_answer(cursor):
+    query = """
+        UPDATE answer SET
+        is_accept = True
+    """
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def refuse_answer(cursor):
+    query = """
+        UPDATE answer SET
+        is_accept = False
+    """
+    cursor.execute(query)
+
+
+@connection.connection_handler
 def get_comment_by_id(cursor, comment_id):
     query = """
                 SELECT * 
@@ -199,12 +247,12 @@ def edit_comment(cursor, comment_id, message):
                 WHERE id = %(comment_id)s
             """
     arguments = {'comment_id': comment_id, 'message': message}
-    cursor.execute(query)
+    cursor.execute(query, arguments)
 
 
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
-def voting(cursor, table, rule, element_id):
+def voting(cursor, table, rule, element_id, user_id):
     query = f"""
     UPDATE {table} SET
     """
@@ -324,6 +372,7 @@ def get_tags_by_quest_id(cursor, question_id):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def check_if_user_in_database(cursor, email):
     query = f""" SELECT * 
@@ -376,5 +425,12 @@ def find_user(cursor, user_id):
     return cursor.fetchall()
 
 
-
-
+def add_reputation(cursor, points, user_id):
+    query = """
+                    UPDATE users
+                    SET reputation = reputation + %(points)s
+                    WHERE users.id = %(user_id)s
+                """
+    arguments = {'points': points, 'user_id': user_id}
+    cursor.execute(query, arguments)
+    return cursor.fetchall()

@@ -104,7 +104,7 @@ def edit_question_page(question_id):
         image = util.upload_image(file)
         data_manager.edit_question(util.un_inject_text(title), util.un_inject_text(message), image, question_id)
         return redirect(f"/question/{question_id}")
-    return render_template('add_question.html', id=id, question=question_form)
+    return render_template('add_question.html', id=question_id, question=question_form)
 
 
 @app.route('/question/<string:question_id>/new-answer', methods=['POST', 'GET'])
@@ -126,8 +126,8 @@ def vote_on_question(question_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/answers/<string:answer_id>/vote_up', methods=['POST', 'GET'])
-@app.route('/answers/<string:answer_id>/vote_down', methods=['POST', 'GET'])
+@app.route('/answers/<answer_id>/vote_up', methods=['POST', 'GET'])
+@app.route('/answers/<answer_id>/vote_down', methods=['POST', 'GET'])
 def vote_on_answers(answer_id):
     answer = data_manager.get_answer_by_id(answer_id)
     rule = request.url_rule
