@@ -93,7 +93,7 @@
     {% for element in comments %}
         {% if element.question_id == question["id"] %}
                 <tr>
-                    <td class="comments">{{element.message}}<br><button type="button" class="btn btn-link">{{ element.email }}</button>
+                    <td class="comments">{{element.message}}<br><button type="button" class="btn btn-link"><a href="/user/{{element.user_id}}" style="color:#337ab7;">{{ element.email }}</a></button>
                         {% if session['id'] == element.user_id %}
                             <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit" style="color:#337ab7;">edit</a></button>
                             <button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete' style="color:#337ab7;">delete</a></button>
@@ -183,7 +183,7 @@
         {% for element in comments %}
             {% if element.answer_id == answer["id"] %}
                 <tr>
-                    <td class="comments">{{element.message}}<button type="button" class="btn btn-link">{{ element.email }}</button>
+                    <td class="comments">{{element.message}}<button type="button" class="btn btn-link"><a href="/user/{{element.user_id}}" style="color:#337ab7;">{{ element.email }}</a></button>
                         {% if session['id'] == element.user_id %}
                         <button type="button" class="btn btn-link"><a href="/comments/{{element.id}}/edit" style="color:#337ab7;">edit</a></button>
                         <button type="button" class="btn btn-link"><a href='/comments/{{element.id}}/delete' style="color:#337ab7;">delete</a></button>

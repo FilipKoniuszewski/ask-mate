@@ -28,8 +28,8 @@
         {{question["vote_number"]}}<br>Votes
         </div>
         <div class = 'box box6'>
-        <h2><a href="/question/{{question["id"]}}" target="_self" style="color: #0077cc;font-size: large;">{{question["title"]}}</a>
-        <div style="font-size: small;color: #333">{{ question['message'] }}</div>
+        <h2><a href="/question/{{question["id"]}}" target="_self" style="color: #0077cc;font-size: large;">{{question["title"]}}</a><br>
+        <div style="font-size:small;color: #666666">{{ question['message'] }}</div>
         <br><br>
                 {% for element in tags %}
                     {% if element.id == question.id %}

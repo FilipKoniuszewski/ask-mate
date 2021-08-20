@@ -232,7 +232,7 @@ def edit_comments_page(comment_id):
         message = request.form['message']
         data_manager.edit_comment(comment_id, message)
         return redirect(request.url)
-    return render_template('comments_form.html', edit_form=edit_form,edit=True,comment_id = comment_id)
+    return render_template('comments_form.html', edit_form=edit_form, edit=True, comment_id=comment_id)
 
 
 @app.route('/user/<user_id>', methods=["POST", "GET"])
@@ -263,8 +263,14 @@ def logout():
 @app.route("/users")
 def print_users_list():
     users_form = data_manager.get_list_of_users()
-    print(users_form)
-    return render_template('users_list.html',users_form = users_form)
+    for element in users_form:
+        num_of_questions = data_manager.number_of_questions(element['id'])
+        num_of_answers = data_manager.number_of_answers(element['id'])
+        num_of_comments = data_manager.number_of_comments(element['id'])
+        element['num_of_questions'] = num_of_questions
+        element['num_of_answers'] = num_of_answers
+        element['num_of_comments'] = num_of_comments
+    return render_template('users_list.html', users_form=users_form)
 
 
 if __name__ == "__main__":

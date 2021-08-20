@@ -1,29 +1,32 @@
 {% extends 'layout.html' %}
-{% block title %}Users :{% endblock %}
-{% block link %} <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='main_page.css') }}/> {% endblock %}
+{% block title %}Users{% endblock %}
+{% block link %}<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='user_page.css') }}/> {% endblock %}
 {% block content %}
-
      <br><br><br>
-     <style> td, th { border: 1px solid black;text-align:center }
-     table {
-                width: 70%;
-            }
-
-        th {
-                height: 60px;
-            }
-
-
-     </style>
+<div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+        <tr>
+            <th>USERNAME</th>
+            <th>REGISTRATION</th>
+            <th>REPUTATION</th>
+            <th>QUESTIONS</th>
+            <th>ANSWERS</th>
+            <th>COMMENTS</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for element in users_form %}
-            <table>
-   <thead>
-   <tr> <th> Email </th><th>registration_date </th><th>reputation</th>  <th> User questions </th><th>User answers </th> <th>User comments</th>
-   <tbody>
-            <tr><th><a href ="/user/{{ element.id }}">{{ element.email }}</a></th><td>{{ element.registration_date }}</td> <td> {{ element.reputation }} <td> DUPA1  <td> DUPA2  <td> DUPA3
-</table>
-            <br>
+        <tr>
+            <td><button type="button" class="btn btn-link"><a href="/user/{{element.id}}">{{element.email}}</a></button></td>
+            <td>{{element.registration_date}}</td>
+            <td>{{element.reputation}}</td>
+            <td>{{element.num_of_questions[0]['question']}}</td>
+            <td>{{element.num_of_answers[0]['answer']}}</td>
+            <td>{{element.num_of_comments[0]['comment']}}</td>
+        </tr>
         {% endfor %}
-
-
+        <tbody>
+    </table>
+</div>
 {% endblock %}
