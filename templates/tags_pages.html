@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block title %}Tags List{% endblock %}
+{% block content %}
+    <br><br><br>
+    {% for item in tag_table  %}
+      <span class="tags"><a>{{item.name }}</a></span>
+        <span>{{ item.number_of_questions }}</span>
+        <br>
+    {% endfor %}
+
+
+{% endblock %}

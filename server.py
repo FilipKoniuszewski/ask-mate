@@ -19,6 +19,8 @@ def all_questions():
         for element in list_of_questions:
             element["submission_time"] = (str(element["submission_time"]))[:10]
         tags = data_manager.get_name_tags_of_specific_questions()
+        for element in list_of_questions:
+            element['email'] = element['email'].split('@')[0]
         return render_template("main_page.html", list=list_of_questions, tags=tags)
 
 
@@ -27,6 +29,8 @@ def main_page():
     mode = "submission_time"
     order = "desc"
     list_of_questions = data_manager.get_questions(mode, order, limit=5)
+    for element in list_of_questions:
+        element['email'] = element['email'].split('@')[0]
     for element in list_of_questions:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     tags = data_manager.get_name_tags_of_specific_questions()
@@ -89,6 +93,8 @@ def question_page(question_id):
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
     comments_to_question = data_manager.get_comments(question_id)
+    for element in comments_to_question:
+        element['email'] = element['email'].split('@')[0]
     data_manager.add_views(question_id)
     return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
                            tags=tags)
@@ -142,7 +148,7 @@ def new_comment_answer(answer_id):
         data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
-    return render_template('comments_form.html', answer_id=answer_id, question_id=None)
+    return render_template('comments_form.html', answer_id=answer_id, question_id=None,edit =False)
 
 
 @app.route('/question/<string:question_id>/new_comment', methods=['POST', 'GET'])
@@ -151,7 +157,7 @@ def new_comment_question(question_id):
         message = request.form['message']
         data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
-    return render_template('comments_form.html', question_id=question_id, answer_id=None)
+    return render_template('comments_form.html', question_id=question_id, answer_id=None,edit = False)
 
 
 @app.route('/comments/<comment_id>/delete')
@@ -185,7 +191,7 @@ def delete_tags(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/register', methods =['POST','GET'])
+@app.route('/register', methods =['POST', 'GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
@@ -219,27 +225,58 @@ def login():
     return render_template('login_page.html')
 
 
+@app.route('/comments/<comment_id>/edit', methods=['POST','GET'])
 def edit_comments_page(comment_id):
-    if "user" in session:
-        user = session["email"]
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
         message = request.form['message']
         data_manager.edit_comment(comment_id, message)
-        return redirect('/')
-    return render_template('add_question.html', edit_form=edit_form)
+        return redirect(request.url)
+    return render_template('comments_form.html', edit_form=edit_form, edit=True, comment_id=comment_id)
 
 
 @app.route('/user/<user_id>', methods=["POST", "GET"])
 def users_page(user_id):
     logged_user = data_manager.find_user(user_id)
-    return render_template('users_page.html', user=logged_user)
+    num_of_questions = data_manager.number_of_questions(user_id)
+    num_of_answers = data_manager.number_of_answers(user_id)
+    num_of_comments = data_manager.number_of_comments(user_id)
+    questions_posted_by_user = data_manager.get_questions_by_user_id(user_id)
+    answers_posted_by_user = data_manager.get_answers_by_user_id(user_id)
+    comments_posted_by_user = data_manager.get_comments_by_user_id(user_id)
+    return render_template('users_page.html', user=logged_user,
+                           num_questions=num_of_questions,
+                           num_answers=num_of_answers,
+                           num_comments=num_of_comments,
+                           questions=questions_posted_by_user,
+                           answers=answers_posted_by_user,
+                           comments=comments_posted_by_user)
 
 
 @app.route("/logout")
 def logout():
+    session.pop("id", None)
     session.pop("user", None)
     return redirect('/')
+
+
+@app.route("/users")
+def print_users_list():
+    users_form = data_manager.get_list_of_users()
+    for element in users_form:
+        num_of_questions = data_manager.number_of_questions(element['id'])
+        num_of_answers = data_manager.number_of_answers(element['id'])
+        num_of_comments = data_manager.number_of_comments(element['id'])
+        element['num_of_questions'] = num_of_questions
+        element['num_of_answers'] = num_of_answers
+        element['num_of_comments'] = num_of_comments
+    return render_template('users_list.html', users_form=users_form)
+
+@app.route("/print_tags")
+def print_tags():
+    tag_table = data_manager.get_list_of_tags()
+    return render_template('tags_pages.html',tag_table = tag_table)
+
 
 
 if __name__ == "__main__":

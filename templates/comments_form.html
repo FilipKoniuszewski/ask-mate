@@ -2,16 +2,14 @@
 {% block title %}New-Comment{% endblock %}
 {% block content %}
     <br><br><br>
-    <table class="styled-title">
-        <thead>
-            <tr>
-                <th>New comment</th>
-            </tr>
-        </thead>
-    </table>
-        <form {%if question_id != None%} action="/question/{{question_id}}/new_comment" method="POST" {%else%} action= "/answer/{{answer_id}}/new_comment" method="POST" {%endif%}>
+        {% if not comment_id  %}
+            <h2>New comment</h2>
+        {%  else %}
+            <h2>Edit comment</h2>
+        {% endif %}
+        <form {%if question_id != None and edit == false %} action="/question/{{question_id}}/new_comment" method="POST" {%elif answer_id !=None and edit== false%} action= "/answer/{{answer_id}}/new_comment" method="POST"{% else %}action="/comments/{{comment_id}}/edit" method="POST" {%endif%}>
             <label for="user-input"></label><br>
-            <textarea id = 'user_input' name="message" rows="3" cols="51"></textarea><br>
-            <button type="Submit">Submit</button>
+            <textarea id = 'user_input' name="message" rows="3" cols="51">{% if comment_id == None %}{{edit_form['message']}}{% endif %}</textarea><br>
+            <button type="Submit" style="color:black">Submit</button>
         </form>
 {% endblock %}

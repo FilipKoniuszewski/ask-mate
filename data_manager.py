@@ -1,11 +1,11 @@
 import connection
 
-
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
     query = """
-        SELECT * FROM question
+        SELECT question.*, users.email FROM question
+        LEFT JOIN users on question.user_id = users.id
     """
     if limit != 0:
         query += f""" ORDER BY {order} {directions}
@@ -250,6 +250,7 @@ def edit_comment(cursor, comment_id, message):
     cursor.execute(query, arguments)
 
 
+
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def voting(cursor, table, rule, element_id, user_id):
@@ -273,6 +274,18 @@ def add_views(cursor, question_id):
             """
     arguments = {'question_id': question_id}
     cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def get_comments(cursor, question_id):
+    query = f"""
+        SELECT comment.*, answer.question_id as answer_question_id, users.email
+        FROM comment LEFT JOIN answer ON comment.answer_id = answer.id 
+        LEFT JOIN users ON comment.user_id = users.id
+        WHERE comment.question_id = {question_id} or answer.question_id = {question_id}
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 # ogarnąć jak zabezpieczyc to gowno
@@ -362,6 +375,16 @@ def get_name_tags_of_specific_questions(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+@connection.connection_handler
+def get_list_of_tags(cursor):
+    query = f"""SELECT name,COUNT(*) AS number_of_questions
+                FROM tag
+                LEFT JOIN question_tag ON question_tag.tag_id = tag.id
+                GROUP By id
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 @connection.connection_handler
 def get_tags_by_quest_id(cursor, question_id):
@@ -434,3 +457,82 @@ def add_reputation(cursor, points, user_id):
     arguments = {'points': points, 'user_id': user_id}
     cursor.execute(query, arguments)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_list_of_users(cursor):
+    query = f"""SELECT  id, email , registration_date,reputation
+                FROM users
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_questions_answers_comments(cursor, user_id):
+    query = f"""SELECT count(question.id) as question, count(answer.id) as answer, count(comment.id) as comment
+                FROM question LEFT JOIN answer ON question.user_id = answer.user_id
+                LEFT JOIN comment ON question.user_id = comment.user_id
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+
+@connection.connection_handler
+def get_questions_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM question
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_answers_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM answer
+                WHERE answer.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_comments_by_user_id(cursor, user_id):
+    query = f"""SELECT * FROM comment
+                WHERE comment.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_questions(cursor, user_id):
+    query = f"""SELECT count(question.id) as question
+                FROM question
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_answers(cursor, user_id):
+    query = f"""SELECT count(answer.id) as answer
+                FROM answer
+                WHERE answer.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def number_of_comments(cursor, user_id):
+    query = f"""SELECT count(comment.id) as comment
+                FROM comment
+                WHERE comment.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
