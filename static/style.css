@@ -230,6 +230,25 @@ hr.style2 {
     background: grey;
 
 }
+.move-side {
+    /*margin-left: 30px;*/
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+
+hr.line-horizontal {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.move-side1 {
+    margin: 15px 500px 0 500px;
+}
+.move-title {
+    margin: 10px 500px 0 640px;
+}
 
 
 

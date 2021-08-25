@@ -1,11 +1,20 @@
 {% extends 'layout.html' %}
 {% block title %}New-tag{% endblock %}
 {% block content %}
+    <style>
+.move-title {
+    margin: 10px 500px 0 660px;
+}
+    </style>
     <br><br><br>
-        <h2>New tag</h2>
+    <div class="move-title">
+        <h2 style="color:#333;">New tag</h2>
+    </div>
+    <div class="move-side1">
         <form action="/{{question_id}}/create-tag" method="POST">
             <label for="tag"></label><br>
             <textarea id = 'tag' name="tag" rows="3" cols="51"></textarea><br>
-            <button type="Submit" style="color:black">Submit</button>
+            <button type="Submit" style="color:#333">Submit</button>
         </form>
+    </div>
 {% endblock %}

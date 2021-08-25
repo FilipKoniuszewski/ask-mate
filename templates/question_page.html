@@ -20,7 +20,7 @@
                 {% endif %}
                 {% endif %}
     </h1>
-
+    <div class="move-side">
     <table class="styled-table">
     <thead>
         <tr>
@@ -105,12 +105,17 @@
             </table>
     </div>
     {% endif %}
+    </div>
     <hr class="style1">
     <br>
     {% if "user" in session %}
     <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">Add answer</a></button>
     {% endif %}
+    <br>
+    <br>
+    <hr class="style1">
     {% for answer in answers %}
+        <div class="move-side">
         <table class="styled-table"{% if answer['is_accept'] %} id = 'is_accepted'{% endif%}>
         <thead>
             <tr>
@@ -200,5 +205,7 @@
             </table>
         </div>
         {% endif %}
+        </div>
+        <hr class="line-horizontal">
     {% endfor %}
 {% endblock %}

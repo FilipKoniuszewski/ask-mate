@@ -50,6 +50,8 @@
             <td></td>
             <td></td>
         </tr>
+    {% if questions %}
+{#       tu warunek #}
         <thead>
         <tr>
             <th>QUESTION</th>
@@ -68,6 +70,10 @@
             <td></td>
             <td></td>
         </tr>
+    {% endif %}
+{#    #tu koniec warunku#}
+{#    #tu warunek#}
+    {% if answers %}
         <thead>
         <tr>
             <th>QUESTION</th>
@@ -85,6 +91,10 @@
             <td></td>
             <td></td>
         </tr>
+    {% endif %}
+{#    #tu koniec warunku#}
+{#    #tu warunek#}
+    {% if comments %}
         <thead>
         <tr>
             <th>QUESTION</th>
@@ -102,6 +112,8 @@
             <td></td>
             <td></td>
         </tr>
+{#    #tu koniec warunku#}
+    {% endif %}
     </table>
     </div>
 {% endblock %}

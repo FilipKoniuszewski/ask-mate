@@ -2,24 +2,20 @@
 {% block title %}New-tag{% endblock %}
 {% block content %}
     <br><br><br>
-    <table class="styled-title">
-        <thead>
-            <tr>
-                <td>ADD TAG</td>
-                <td>
-                <form action="/question/{{question_id}}/new-tag" method="POST">
-                <label for="add-tag"></label>
-                <select name="add-tag" id="add-tag" onchange="createTag()">
+    <div class="move-title">
+    <h2 style="color:#333;">ADD TAG</h2>
+    <br><br>
+        <form action="/question/{{question_id}}/new-tag" method="POST">
+            <label for="add-tag"></label>
+            <select name="add-tag" id="add-tag" onchange="createTag()">
                 {% for element in tags %}
-                <option value="{{element.id}}">{{element.name}}</option>
+                    <option value="{{element.id}}">{{element.name}}</option>
                 {% endfor %}
                 <option value="create">Create tag</option>
-                <input type="submit" value="Add">
-                </select>
-                </form>
-                </td>`
-        </thead>
-    </table>
+                <input type="submit" value="Add" style="color:#333;">
+            </select>
+        </form>
+    </div>
     <script>
     function createTag(){
         let select = document.getElementById("add-tag").value
@@ -27,6 +23,5 @@
             window.location.href="/{{question_id}}/create-tag"
         }
     }
-
     </script>
 {% endblock %}
