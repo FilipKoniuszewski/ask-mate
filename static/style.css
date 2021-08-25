@@ -3,20 +3,24 @@
     padding: 0;
     margin: 10px;
 }
+
 #restpage a:link {
     color: #333;
     background-color: transparent;
     text-decoration: none;
 }
+
 #restpage a:visited {
     color: #333;
     background-color: transparent;
     text-decoration: none;
 }
+
 table {
     border: 1px #36475d;
     width: 30%;
 }
+
 div.header {
     background-color: darkgrey;
     margin-left: -10px;
@@ -24,10 +28,12 @@ div.header {
     padding: -20px;
     width: 200%;
 }
+
 h3 {
     margin: 10px;
     color: black;
 }
+
 .styled-title {
     border-collapse: collapse;
     margin: 25px 0;
@@ -37,11 +43,13 @@ h3 {
     border-radius: 5px 5px 5px 5px;
     overflow: hidden;
 }
+
 .styled-title thead tr {
     background-color: #234c50;
     color: #ffffff;
     text-align: center;
 }
+
 .button {
 	color: white !important;
 	text-transform: lowercase;
@@ -53,6 +61,7 @@ h3 {
 	border: #8db0c1;
 	transition: all 0.4s ease 0s;
 }
+
 .button:hover {
 	background: #4682b4;
 	letter-spacing: 1px;
@@ -61,6 +70,7 @@ h3 {
 	box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
 	transition: all 0.4s ease 0s;
 }
+
 .info {
     background-color: #234c50;
     border: none;
@@ -73,14 +83,17 @@ h3 {
     margin: 4px 2px;
     border-radius: 2px;
 }
+
 .title-of-question {
     font-size: 25px;
 }
+
 #myImg {
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
 }
+
 #myImg1 {
   border-radius: 5px;
   cursor: pointer;
@@ -105,6 +118,7 @@ h3 {
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.9);
 }
+
 .modal1 {
   display: none;
   position: fixed;
@@ -118,18 +132,21 @@ h3 {
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.9);
 }
+
 .modal-content {
   margin: auto;
   display: block;
   width: 80%;
   max-width: 700px;
 }
+
 .modal-content1 {
   margin: auto;
   display: block;
   width: 80%;
   max-width: 700px;
 }
+
 #caption {
   margin: auto;
   display: block;
@@ -140,6 +157,7 @@ h3 {
   padding: 10px 0;
   height: 150px;
 }
+
 #caption1 {
   margin: auto;
   display: block;
@@ -150,18 +168,22 @@ h3 {
   padding: 10px 0;
   height: 150px;
 }
+
 .modal-content, #caption {
   animation-name: zoom;
   animation-duration: 0.6s;
 }
+
 .modal-content1, #caption1 {
   animation-name: zoom;
   animation-duration: 0.6s;
 }
+
 @keyframes zoom {
   from {transform: scale(0.1)}
   to {transform: scale(1)}
 }
+
 .close {
   position: absolute;
   top: 15px;
@@ -171,6 +193,7 @@ h3 {
   font-weight: bold;
   transition: 0.3s;
 }
+
 .close1 {
   position: absolute;
   top: 15px;
@@ -180,18 +203,21 @@ h3 {
   font-weight: bold;
   transition: 0.3s;
 }
+
 .close:hover,
 .close:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
 }
+
 .close1:hover,
 .close1:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
 }
+
 @media only screen and (max-width: 700px) {
     .modal-content {
         width: 100%;
@@ -200,6 +226,7 @@ h3 {
         width: 100%;
     }
 }
+
 hr.style1 {
     border: 0;
     height: 1px;
@@ -226,12 +253,13 @@ hr.style2 {
     display: flex;
     justify-content: center;
 }
+
 .delete-button {
     background: grey;
 
 }
+
 .move-side {
-    /*margin-left: 30px;*/
     margin-left: 40px;
     margin-bottom: 20px;
 }
@@ -246,6 +274,7 @@ hr.line-horizontal {
 .move-side1 {
     margin: 15px 500px 0 500px;
 }
+
 .move-title {
     margin: 10px 500px 0 640px;
 }
