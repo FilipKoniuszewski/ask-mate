@@ -17,16 +17,15 @@
                 <input type="submit" value="Add">
                 </select>
                 </form>
-                </td>`
+                </td>
         </thead>
     </table>
     <script>
     function createTag(){
         let select = document.getElementById("add-tag").value
-        if(select == "create"){
+        if(select === "create"){
             window.location.href="/{{question_id}}/create-tag"
         }
     }
-
     </script>
 {% endblock %}

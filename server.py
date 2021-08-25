@@ -96,7 +96,8 @@ def question_page(question_id):
     for element in comments_to_question:
         element['email'] = element['email'].split('@')[0]
     data_manager.add_views(question_id)
-    return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
+    return render_template("question_page.html", question=question, answers=list_of_answers,
+                           comments=comments_to_question,
                            tags=tags)
 
 
@@ -148,7 +149,7 @@ def new_comment_answer(answer_id):
         data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
-    return render_template('comments_form.html', answer_id=answer_id, question_id=None,edit =False)
+    return render_template('comments_form.html', answer_id=answer_id, question_id=None, edit=False)
 
 
 @app.route('/question/<string:question_id>/new_comment', methods=['POST', 'GET'])
@@ -157,7 +158,7 @@ def new_comment_question(question_id):
         message = request.form['message']
         data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
-    return render_template('comments_form.html', question_id=question_id, answer_id=None,edit = False)
+    return render_template('comments_form.html', question_id=question_id, answer_id=None, edit=False)
 
 
 @app.route('/comments/<comment_id>/delete')
@@ -191,13 +192,13 @@ def delete_tags(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/register', methods =['POST', 'GET'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
             email = request.form['email']
             password = util.hash_password(request.form['password'])
-            data_manager.save_user(email,password)
+            data_manager.save_user(email, password)
             return redirect('/')
         else:
             return render_template('register_page.html', info="Sorry but that mail is already in use")
@@ -210,7 +211,7 @@ def login():
         if data_manager.check_if_user_in_database(request.form['email']):
             password = request.form['password']
             saved_password = data_manager.get_password_by_email(request.form['email'])['password']
-            if util.verify_password(password,saved_password):
+            if util.verify_password(password, saved_password):
                 user = request.form['email']
                 username = user.split('@')
                 user_id = data_manager.find_user_id_by_email(user)
@@ -225,7 +226,7 @@ def login():
     return render_template('login_page.html')
 
 
-@app.route('/comments/<comment_id>/edit', methods=['POST','GET'])
+@app.route('/comments/<comment_id>/edit', methods=['POST', 'GET'])
 def edit_comments_page(comment_id):
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
@@ -272,11 +273,11 @@ def print_users_list():
         element['num_of_comments'] = num_of_comments
     return render_template('users_list.html', users_form=users_form)
 
+
 @app.route("/print_tags")
 def print_tags():
     tag_table = data_manager.get_list_of_tags()
-    return render_template('tags_pages.html',tag_table = tag_table)
-
+    return render_template('tags_pages.html', tag_table=tag_table)
 
 
 if __name__ == "__main__":

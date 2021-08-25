@@ -1,6 +1,6 @@
 import connection
 
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
 def get_questions(cursor, order, directions, limit=0):
     query = """
@@ -86,7 +86,7 @@ def edit_question(cursor, title, message, image, question_id):
         query += ",image = %(image)s"
     else:
         query += ",image = null"
-    query += " WHERE id = %(question_id)s"
+    query += "WHERE id = %(question_id)s"
     arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
     cursor.execute(query, arguments)
 
@@ -250,7 +250,6 @@ def edit_comment(cursor, comment_id, message):
     cursor.execute(query, arguments)
 
 
-
 # ogarnąć jak zabezpieczyc to gowno
 @connection.connection_handler
 def voting(cursor, table, rule, element_id, user_id):
@@ -375,6 +374,7 @@ def get_name_tags_of_specific_questions(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def get_list_of_tags(cursor):
     query = f"""SELECT name,COUNT(*) AS number_of_questions
@@ -448,6 +448,7 @@ def find_user(cursor, user_id):
     return cursor.fetchall()
 
 
+@connection.connection_handler
 def add_reputation(cursor, points, user_id):
     query = """
                     UPDATE users
@@ -477,7 +478,6 @@ def number_of_questions_answers_comments(cursor, user_id):
     """
     cursor.execute(query)
     return cursor.fetchall()
-
 
 
 @connection.connection_handler
@@ -535,4 +535,3 @@ def number_of_comments(cursor, user_id):
     """
     cursor.execute(query)
     return cursor.fetchall()
-

@@ -2,12 +2,6 @@
 {% block title %}New-Answer{% endblock %}
 {% block content %}
     <br><br><br>
-<<<<<<< HEAD
-    <table class="styled-title">
-        <thead>
-            <tr>
-=======
->>>>>>> 34227cb27140128c0e43e1945ccf82c9d701177b
             {%if id == None%}
                 <h2>New Answer</h2>
             {%else%}
@@ -15,7 +9,7 @@
             {%endif%}
         <form {%if id == None%} action="/question/{{question_id}}/new-answer" method="POST" enctype="multipart/form-data" {%else%} action= "/answer/{{id}}/edit" method="POST" enctype="multipart/form-data"{%endif%}>
             <label for="answer-input"></label><br>
-            <textarea id = 'user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
+            <textarea id='user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
             <input type="file" name="image" /><br><br>
             <button type="Submit">{%if id == None %}Submit{%else:%}edit{%endif%}</button>
         </form>
