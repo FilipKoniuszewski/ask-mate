@@ -465,5 +465,17 @@ def number_of_comments(cursor, user_id):
     return cursor.fetchall()
 
 
+@connection.connection_handler
+def accepting_the_answer(cursor,id):
+    query = f"""UPDATE answer
+                SET is_accept = true
+                WHERE id = '{id}'
+             """
+    cursor.execute(query)
+
+
+
+
+
 
 

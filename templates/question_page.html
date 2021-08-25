@@ -142,6 +142,9 @@
                     {% endif %}
                     <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
                     {% endif %}
+                    {% if session['id'] == question['user_id'] %}
+                        <button type="button" class='btn btn-default'><a href ="/acceptance/{{answer["id"]}}/{{ question["id"]}}" target="_self" rel="nofollow noopener">accept</a></button>
+                    {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>
             </tr>

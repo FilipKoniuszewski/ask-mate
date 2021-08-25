@@ -278,6 +278,14 @@ def print_tags():
     return render_template('tags_pages.html',tag_table = tag_table)
 
 
+@app.route("/acceptance/<id>/<question_id>")
+def accept(id,question_id):
+    data_manager.accepting_the_answer(id)
+    return redirect(f"/question/{question_id}")
+
+    
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
