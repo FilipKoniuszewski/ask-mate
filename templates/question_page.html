@@ -145,7 +145,7 @@
                     {% if session['id'] == question['user_id'] and answer['is_accept']== false %}
                         <button type="button" class='btn btn-default'><a href ="/acceptance/{{answer["id"]}}/{{ question["id"]}}" target="_self" rel="nofollow noopener">accept</a></button>
                     {% elif answer['is_accept']== true %}
-                        <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/fajka.png" width="20">
+                        <img alt="accepted" src="/static/images/fajka.png" width="20">
                     {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>
