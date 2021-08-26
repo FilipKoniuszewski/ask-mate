@@ -151,10 +151,12 @@
                     {% endif %}
                     <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
                     {% endif %}
+                    {% if answer['user_id'] != question['user_id'] %}
                     {% if session['id'] == question['user_id'] and answer['is_accept']== false %}
                         <button type="button" class='btn btn-default'><a href ="/acceptance/{{answer["id"]}}/{{ question["id"]}}" target="_self" rel="nofollow noopener">accept</a></button>
                     {% elif answer['is_accept']== true %}
                         <img alt="accepted" src="/static/images/fajka.png" width="20">
+                    {% endif %}
                     {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>
