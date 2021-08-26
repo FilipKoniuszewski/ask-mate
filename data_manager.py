@@ -32,8 +32,7 @@ def get_question_by_id(cursor, question_id):
 def add_question(cursor, title, message, image, user_id):
     query = """
         INSERT INTO question (submission_time, view_number, vote_number, title, message, user_id, image)
-        VALUES (NOW(), 0, 0, %(title)s, %(message)s, %(user_id)s,
-        """
+        VALUES (NOW(), 0, 0, %(title)s, %(message)s, %(user_id)s,"""
     if image == "":
         query += "null)"
     else:
@@ -67,6 +66,24 @@ def edit_question(cursor, title, message, image, question_id):
         message = %(message)s
     """
     if image != "":
+        query += ",image = %(image)s "
+    else:
+        query += ",image = null "
+    query += " WHERE id = %(question_id)s"
+    print(query)
+    arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def edit_question(cursor, title, message, image, question_id):
+    query = """
+        UPDATE question SET
+        submission_time = NOW(),
+        title = %(title)s,
+        message = %(message)s
+    """
+    if image != "":
         query += ",image = %(image)s"
     else:
         query += ",image = null"
@@ -81,6 +98,7 @@ def get_answers(cursor, question_id):
             SELECT *
             FROM answer
             WHERE question_id=%(question_id)s
+            ORDER BY is_accept, vote_number DESC
         """
     arguments = {"question_id": question_id}
     cursor.execute(query, arguments)
@@ -107,7 +125,7 @@ def add_answer(cursor, question_id, message, image, user_id):
     if image == "":
         query += ",null)"
     else:
-        query += ",%(image)s"
+        query += ",%(image)s)"
     arguments = {'question_id': question_id, 'message': message, 'user_id': user_id, 'image': image}
     cursor.execute(query, arguments)
 
@@ -136,6 +154,38 @@ def edit_answer(cursor, message, image, answer_id):
     query += " WHERE id = %(answer_id)s"
     arguments = {'message': message, 'image': image, 'answer_id': answer_id}
     cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def edit_answer(cursor, message, image, answer_id):
+    query = """
+        UPDATE answer SET
+        submission_time = NOW(),
+        message = %(message)s
+    """
+    if image != "":
+        query += ",image = %(image)s"
+    query += " WHERE id = %(answer_id)s"
+    arguments = {'message': message, 'image': image, 'answer_id': answer_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def accept_answer(cursor):
+    query = """
+        UPDATE answer SET
+        is_accept = True
+    """
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def refuse_answer(cursor):
+    query = """
+        UPDATE answer SET
+        is_accept = False
+    """
+    cursor.execute(query)
 
 
 @connection.connection_handler
@@ -199,7 +249,7 @@ def edit_comment(cursor, comment_id, message):
                 WHERE id = %(comment_id)s
             """
     arguments = {'comment_id': comment_id, 'message': message}
-    cursor.execute(query,arguments)
+    cursor.execute(query, arguments)
 
 
 
@@ -209,8 +259,16 @@ def voting(cursor, table, rule, element_id):
     UPDATE {table} SET
     """
     if 'vote_up' in rule.rule:
+        if table == 'question':
+            add_reputation_question(5, element_id)
+        else:
+            add_reputation_answer(10, element_id)
         query += "vote_number = vote_number + 1"
     else:
+        if table == 'question':
+            add_reputation_question(-2, element_id)
+        else:
+            add_reputation_answer(-2, element_id)
         query += "vote_number = vote_number - 1"
     query += f"WHERE id = {element_id}"
     cursor.execute(query)
@@ -239,12 +297,12 @@ def get_comments(cursor, question_id):
     return cursor.fetchall()
 
 
-
 @connection.connection_handler
 def search_for_phrase_in_questions(cursor, phrase):
     query = f"""
-                SELECT DISTINCT question.*
+                SELECT DISTINCT question.*, users.email
                 FROM question LEFT JOIN answer ON question.id = answer.question_id
+                LEFT JOIN users on question.user_id = users.id
                 WHERE LOWER(answer.message) LIKE LOWER('%{phrase}%') or 
                 LOWER(question.title) LIKE LOWER('%{phrase}%') or LOWER(question.message) LIKE LOWER('%{phrase}%')
             """
@@ -326,6 +384,7 @@ def get_name_tags_of_specific_questions(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def get_list_of_tags(cursor):
     query = f"""SELECT name,COUNT(*) AS number_of_questions
@@ -345,6 +404,7 @@ def get_tags_by_quest_id(cursor, question_id):
             WHERE qt.question_id = {question_id} """
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @connection.connection_handler
 def check_if_user_in_database(cursor, email):
@@ -399,6 +459,34 @@ def find_user(cursor, user_id):
 
 
 @connection.connection_handler
+def add_reputation_answer(cursor, points, answer_id):
+    user_id_query = """ SELECT user_id FROM answer where id = %(answer_id)s"""
+    cursor.execute(user_id_query, {'answer_id': answer_id})
+    user_id = cursor.fetchone()['user_id']
+    reputation_add_query = """
+                       UPDATE users
+                       SET reputation = reputation + %(points)s
+                       WHERE users.id = %(user_id)s
+                   """
+    arguments = {'points': points, 'user_id': user_id}
+    cursor.execute(reputation_add_query, arguments)
+
+
+@connection.connection_handler
+def add_reputation_question(cursor, points, question_id):
+    user_id_query = """ SELECT user_id FROM question where id = %(question_id)s"""
+    cursor.execute(user_id_query, {'question_id': question_id})
+    user_id = cursor.fetchone()['user_id']
+    reputation_add_query = """
+                    UPDATE users
+                    SET reputation = reputation + %(points)s
+                    WHERE users.id = %(user_id)s
+                """
+    arguments = {'points': points, 'user_id': user_id}
+    cursor.execute(reputation_add_query, arguments)
+
+
+@connection.connection_handler
 def get_list_of_users(cursor):
     query = f"""SELECT  id, email , registration_date,reputation
                 FROM users
@@ -406,6 +494,16 @@ def get_list_of_users(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
+@connection.connection_handler
+def number_of_questions_answers_comments(cursor, user_id):
+    query = f"""SELECT count(question.id) as question, count(answer.id) as answer, count(comment.id) as comment
+                FROM question LEFT JOIN answer ON question.user_id = answer.user_id
+                LEFT JOIN comment ON question.user_id = comment.user_id
+                WHERE question.user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 @connection.connection_handler
@@ -466,16 +564,11 @@ def number_of_comments(cursor, user_id):
 
 
 @connection.connection_handler
-def accepting_the_answer(cursor,id):
+def accepting_the_answer(cursor, answer_id):
+    add_reputation_answer(15, answer_id)
     query = f"""UPDATE answer
                 SET is_accept = true
-                WHERE id = '{id}'
+                WHERE id = '{answer_id}'
              """
     cursor.execute(query)
-
-
-
-
-
-
 

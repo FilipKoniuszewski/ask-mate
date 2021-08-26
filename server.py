@@ -41,10 +41,11 @@ def main_page():
 def search():
     phrase = request.args.get('phrase')
     list_of_questions_with_phrase = data_manager.search_for_phrase_in_questions(phrase)
+    tags = data_manager.get_name_tags_of_specific_questions()
     for questions in list_of_questions_with_phrase:
         questions["title"] = util.highlight(phrase, questions["title"])
         questions["message"] = util.highlight(phrase, questions["message"])
-    return render_template("main_page.html", list=list_of_questions_with_phrase)
+    return render_template("main_page.html", list=list_of_questions_with_phrase, tags=tags)
 
 
 @app.route("/add-question", methods=["POST", "GET"])
@@ -88,15 +89,17 @@ def edit_answer(answer_id):
 def question_page(question_id):
     tags = data_manager.get_tags_by_quest_id(question_id)
     question = data_manager.get_question_by_id(question_id)
-    question["submission_time"] = (str(question["submission_time"]))[:10]
+    # question["submission_time"] = (str(question["submission_time"]))[:10]
     list_of_answers = data_manager.get_answers(question_id)
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
+        # pass
     comments_to_question = data_manager.get_comments(question_id)
     for element in comments_to_question:
         element['email'] = element['email'].split('@')[0]
     data_manager.add_views(question_id)
-    return render_template("question_page.html", question=question, answers=list_of_answers, comments=comments_to_question,
+    return render_template("question_page.html", question=question, answers=list_of_answers,
+                           comments=comments_to_question,
                            tags=tags)
 
 
@@ -110,7 +113,7 @@ def edit_question_page(question_id):
         image = util.upload_image(file)
         data_manager.edit_question(util.un_inject_text(title), util.un_inject_text(message), image, question_id)
         return redirect(f"/question/{question_id}")
-    return render_template('add_question.html', id=id, question=question_form)
+    return render_template('add_question.html', id=question_id, question=question_form)
 
 
 @app.route('/question/<string:question_id>/new-answer', methods=['POST', 'GET'])
@@ -132,8 +135,8 @@ def vote_on_question(question_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/answers/<string:answer_id>/vote_up', methods=['POST', 'GET'])
-@app.route('/answers/<string:answer_id>/vote_down', methods=['POST', 'GET'])
+@app.route('/answers/<answer_id>/vote_up', methods=['POST', 'GET'])
+@app.route('/answers/<answer_id>/vote_down', methods=['POST', 'GET'])
 def vote_on_answers(answer_id):
     answer = data_manager.get_answer_by_id(answer_id)
     rule = request.url_rule
@@ -148,7 +151,7 @@ def new_comment_answer(answer_id):
         data_manager.add_new_comment_answer(answer_id, message, session['id'])
         answer = data_manager.get_answer_by_id(answer_id)
         return redirect(f"/question/{str(answer['question_id'])}")
-    return render_template('comments_form.html', answer_id=answer_id, question_id=None,edit =False)
+    return render_template('comments_form.html', answer_id=answer_id, question_id=None, edit=False)
 
 
 @app.route('/question/<string:question_id>/new_comment', methods=['POST', 'GET'])
@@ -157,7 +160,7 @@ def new_comment_question(question_id):
         message = request.form['message']
         data_manager.add_new_comment_question(question_id, message, session['id'])
         return redirect(f"/question/{str(question_id)}")
-    return render_template('comments_form.html', question_id=question_id, answer_id=None,edit = False)
+    return render_template('comments_form.html', question_id=question_id, answer_id=None, edit=False)
 
 
 @app.route('/comments/<comment_id>/delete')
@@ -191,13 +194,13 @@ def delete_tags(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/register', methods =['POST', 'GET'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
         if not data_manager.check_if_user_in_database(request.form['email']):
             email = request.form['email']
             password = util.hash_password(request.form['password'])
-            data_manager.save_user(email,password)
+            data_manager.save_user(email, password)
             return redirect('/')
         else:
             return render_template('register_page.html', info="Sorry but that mail is already in use")
@@ -210,7 +213,7 @@ def login():
         if data_manager.check_if_user_in_database(request.form['email']):
             password = request.form['password']
             saved_password = data_manager.get_password_by_email(request.form['email'])['password']
-            if util.verify_password(password,saved_password):
+            if util.verify_password(password, saved_password):
                 user = request.form['email']
                 username = user.split('@')
                 user_id = data_manager.find_user_id_by_email(user)
@@ -225,7 +228,7 @@ def login():
     return render_template('login_page.html')
 
 
-@app.route('/comments/<comment_id>/edit', methods=['POST','GET'])
+@app.route('/comments/<comment_id>/edit', methods=['POST', 'GET'])
 def edit_comments_page(comment_id):
     edit_form = data_manager.get_comment_by_id(comment_id)
     if request.method == 'POST':
@@ -272,20 +275,18 @@ def print_users_list():
         element['num_of_comments'] = num_of_comments
     return render_template('users_list.html', users_form=users_form)
 
+
 @app.route("/print_tags")
 def print_tags():
     tag_table = data_manager.get_list_of_tags()
-    return render_template('tags_pages.html',tag_table = tag_table)
+    return render_template('tags_pages.html', tag_table=tag_table)
 
 
 @app.route("/acceptance/<id>/<question_id>")
-def accept(id,question_id):
+def accept(id, question_id):
     data_manager.accepting_the_answer(id)
     return redirect(f"/question/{question_id}")
 
-    
-    
-    
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

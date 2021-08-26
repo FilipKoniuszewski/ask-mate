@@ -12,6 +12,7 @@
                     <option value="{{element.id}}">{{element.name}}</option>
                 {% endfor %}
                 <option value="create">Create tag</option>
+
                 <input type="submit" value="Add" style="color:#333;">
             </select>
         </form>
@@ -19,7 +20,7 @@
     <script>
     function createTag(){
         let select = document.getElementById("add-tag").value
-        if(select == "create"){
+        if(select === "create"){
             window.location.href="/{{question_id}}/create-tag"
         }
     }

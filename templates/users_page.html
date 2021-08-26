@@ -43,8 +43,10 @@
             {% endfor %}
         </tr>
         <tr>
+            {% for element in user %}
             <td>REPUTATION</td>
-            <td>0</td>
+            <td>{{element.reputation}}</td>
+            {% endfor %}
         </tr>
         <tr>
             <td></td>

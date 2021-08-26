@@ -131,14 +131,14 @@
             <tr>
                 <td>
                     {% if "user" in session %}
-                    <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
+                    <a href="/answers/{{answer["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
                     {% endif %}
-                    <a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                    <a style="text-align:center;"><span class="font-right-color">{{answer["vote_number"]}}</span></a>
                     {% if "user" not in session %}
                     <a style="text-align:center;"><span class="font-right-color">votes</span></a>
                     {% endif %}
                     {% if "user" in session %}
-                    <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                    <a href="/answers/{{answer["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
                     {% endif %}
                     {% if 'user' in session %}
                     {% if session['id'] == answer.user_id %}

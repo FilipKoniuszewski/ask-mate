@@ -12,7 +12,7 @@
     <div class="move-side1">
         <form {%if id == None%} action="/question/{{question_id}}/new-answer" method="POST" enctype="multipart/form-data" {%else%} action= "/answer/{{id}}/edit" method="POST" enctype="multipart/form-data"{%endif%}>
             <label for="answer-input"></label><br>
-            <textarea id = 'user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
+            <textarea id='user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
             <input type="file" name="image" /><br><br>
             <button type="Submit" style="color:#333">{%if id == None %}Submit{%else:%}edit{%endif%}</button>
         </form>
