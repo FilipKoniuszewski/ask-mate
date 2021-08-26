@@ -2,15 +2,19 @@
 {% block title %}New-Answer{% endblock %}
 {% block content %}
     <br><br><br>
+    <div class="move-title">
             {%if id == None%}
-                <h2>New Answer</h2>
+                <h2 style="color:#333;">New Answer</h2>
             {%else%}
-                <h2>Edit Answer</h2>
+                <h2 style="color:#333;">Edit Answer</h2>
             {%endif%}
+    </div>
+    <div class="move-side1">
         <form {%if id == None%} action="/question/{{question_id}}/new-answer" method="POST" enctype="multipart/form-data" {%else%} action= "/answer/{{id}}/edit" method="POST" enctype="multipart/form-data"{%endif%}>
             <label for="answer-input"></label><br>
             <textarea id='user_input' name="message" rows="3" cols="51">{%if id != None%}{{edit_form["message"]}}{%endif%}</textarea><br>
             <input type="file" name="image" /><br><br>
-            <button type="Submit">{%if id == None %}Submit{%else:%}edit{%endif%}</button>
+            <button type="Submit" style="color:#333">{%if id == None %}Submit{%else:%}edit{%endif%}</button>
         </form>
+    </div>
 {% endblock %}

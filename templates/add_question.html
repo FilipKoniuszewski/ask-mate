@@ -2,21 +2,21 @@
 {% block title %}Add Question{% endblock %}
 {% block content %}
     <br><br><br>
-    {% if question == None %}
-        <h2>New Question</h2>
-    {% else: %}
-        <h2>Edit question</h2>
-    {% endif %}
-    <form {% if question==None %}action="/add-question"
-          {% else: %}action="/question/{{ question["id"] }}/edit" {% endif %} method="POST"
-          enctype="multipart/form-data">
-        <label for="question"></label><br>
-        <textarea id="question" name="title" rows="5" cols="51">{% if question!=None %}
-            {{ question["title"] }}{% endif %}</textarea><br><br>
-        <textarea id="question" name="message" rows="10" cols="51">{% if question!=None %}
-            {{ question["message"] }}{% endif %}</textarea><br><br>
-        <input type="file" name="image" value="{{ question["image"] }}"/><br><br>
-        <button type="Submit" style="color:black">Submit</button>
+    <div class="move-title">
+        {%if question == None%}
+            <h2 style="color:#333;">New Question</h2>
+        {%else:%}
+            <h2 style="color:#333;">Edit question</h2>
+        {%endif%}
+    </div>
+    <div class="move-side1">
+<form {% if question==None %}action="/add-question"{% else: %}action="/question/{{ question["id"]}}/edit" {% endif %} method="POST" enctype="multipart/form-data">
+    <label for="question"></label><br>
+    <textarea id="question" name="title" rows="5" cols="51" placeholder="Title">{%if question!=None%}{{question["title"]}}{%endif%}</textarea><br><br>
+    <textarea id="question" name="message" rows="10" cols="51" placeholder="Message">{%if question!=None%}{{question["message"]}}{%endif%}</textarea><br><br>
+    <input type="file" name="image" value="{{ question["image"] }}"/><br><br>
+    <button type="Submit" style="color:#333">Submit</button>
 
-    </form>
+</form>
+    </div>
 {% endblock %}

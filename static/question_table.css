@@ -9,15 +9,18 @@
     border-radius: 5px 5px 0 0;
     overflow: hidden;
 }
+
 .styled-table thead tr {
     background-color: #36383f;
     color: #ffffff;
     text-align: left;
 }
+
 .styled-table th,
 .styled-table td {
     padding: 12px 15px;
 }
+
 .styled-table tbody tr.active-row {
     font-weight: bold;
     color: #009879;

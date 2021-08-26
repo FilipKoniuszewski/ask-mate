@@ -54,6 +54,7 @@
 .login-container [type='text']{
   padding-left: 1em;
 }
+
 .login-container [type='password']{
   padding-left: 1em;
 }
@@ -70,6 +71,7 @@
   color: rgba(35, 76, 80, 1);
   outline: none;
 }
+
 .login-container [type='password']:focus {
   border: 0;
   border-bottom: 5px solid #42444f;

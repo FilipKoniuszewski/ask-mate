@@ -97,6 +97,7 @@ def get_answers(cursor, question_id):
             SELECT *
             FROM answer
             WHERE question_id=%(question_id)s
+            ORDER BY id
         """
     arguments = {"question_id": question_id}
     cursor.execute(query, arguments)
@@ -459,7 +460,7 @@ def find_user(cursor, user_id):
 @connection.connection_handler
 def add_reputation_answer(cursor, points, answer_id):
     user_id_query = """ SELECT user_id FROM answer where id = %(answer_id)s"""
-    cursor.execute(user_id_query, {'question_id': answer_id})
+    cursor.execute(user_id_query, {'answer_id': answer_id})
     user_id = cursor.fetchone()['user_id']
     reputation_add_query = """
                        UPDATE users

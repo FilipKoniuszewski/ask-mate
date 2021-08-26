@@ -9,6 +9,7 @@ table.comments, td.comments, th.comments {
   overflow-wrap: break-word;
   margin-top: 8px;
 }
+
 table.comments {
   border-collapse: collapse;
 }
