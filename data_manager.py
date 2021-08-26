@@ -19,7 +19,7 @@ def get_questions(cursor, order, directions, limit=0):
 @connection.connection_handler
 def get_question_by_id(cursor, question_id):
     query = """
-        SELECT *
+        SELECT question.*
         FROM question
         WHERE id = %(question_id)s
     """
@@ -95,8 +95,8 @@ def edit_question(cursor, title, message, image, question_id):
 @connection.connection_handler
 def get_answers(cursor, question_id):
     query = """
-            SELECT *
-            FROM answer
+            SELECT answer.*
+            FROM answer 
             WHERE question_id=%(question_id)s
             ORDER BY is_accept, vote_number DESC
         """
