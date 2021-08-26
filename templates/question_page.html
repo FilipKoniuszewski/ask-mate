@@ -111,7 +111,7 @@
     <button type="button" class="btn btn-default"><a href='/question/{{question['id']}}/new-answer' target="_self" rel="nofollow noopener">Add answer</a></button>
     {% endif %}
     {% for answer in answers %}
-        <table class="styled-table">
+        <table class="styled-table"{% if answer['is_accept'] %} id = 'is_accepted'{% endif%}>
         <thead>
             <tr>
                 <th>Answer</th>
@@ -126,14 +126,14 @@
             <tr>
                 <td>
                     {% if "user" in session %}
-                    <a href="/question/{{question["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
+                    <a href="/question/{{answer["id"]}}/vote_down"><img alt="downvote" src="/static/images/icon4.png" width="20"></a>&nbsp
                     {% endif %}
-                    <a style="text-align:center;"><span class="font-right-color">{{question["vote_number"]}}</span></a>
+                    <a style="text-align:center;"><span class="font-right-color">{{answer["vote_number"]}}</span></a>
                     {% if "user" not in session %}
                     <a style="text-align:center;"><span class="font-right-color">votes</span></a>
                     {% endif %}
                     {% if "user" in session %}
-                    <a href="/question/{{question["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
+                    <a href="/question/{{answer["id"]}}/vote_up"><img alt="upvote" src="/static/images/icon3.png" width="20"></a>
                     {% endif %}
                     {% if 'user' in session %}
                     {% if session['id'] == answer.user_id %}
@@ -141,6 +141,11 @@
                     <button type="button" class='btn btn-default'><a href="/answer/{{answer["id"]}}/delete" target="_self" rel="nofollow noopener">delete</a></button>
                     {% endif %}
                     <button type="button" class="btn btn-default"><a href="/answer/{{answer["id"]}}//new_comment" target="_self" rel="nofollow noopener">comment</a></button>
+                    {% endif %}
+                    {% if session['id'] == question['user_id'] and answer['is_accept']== false %}
+                        <button type="button" class='btn btn-default'><a href ="/acceptance/{{answer["id"]}}/{{ question["id"]}}" target="_self" rel="nofollow noopener">accept</a></button>
+                    {% elif answer['is_accept']== true %}
+                        <img alt="accepted" src="/static/images/fajka.png" width="20">
                     {% endif %}
                     <i><a style="font-size:small;color:#333;">&nbsp&nbsp<span>{{(answer["submission_time"])}}</span></a></i>
                 </td>

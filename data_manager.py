@@ -250,15 +250,23 @@ def edit_comment(cursor, comment_id, message):
     cursor.execute(query, arguments)
 
 
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
-def voting(cursor, table, rule, element_id, user_id):
+def voting(cursor, table, rule, element_id):
     query = f"""
     UPDATE {table} SET
     """
     if 'vote_up' in rule.rule:
+        if table == 'question':
+            add_reputation_question(5, element_id)
+        else:
+            add_reputation_answer(10, element_id)
         query += "vote_number = vote_number + 1"
     else:
+        if table == 'question':
+            add_reputation_question(-2, element_id)
+        else:
+            add_reputation_answer(-2, element_id)
         query += "vote_number = vote_number - 1"
     query += f"WHERE id = {element_id}"
     cursor.execute(query)
@@ -287,7 +295,7 @@ def get_comments(cursor, question_id):
     return cursor.fetchall()
 
 
-# ogarnąć jak zabezpieczyc to gowno
+
 @connection.connection_handler
 def search_for_phrase_in_questions(cursor, phrase):
     query = f"""
@@ -449,15 +457,31 @@ def find_user(cursor, user_id):
 
 
 @connection.connection_handler
-def add_reputation(cursor, points, user_id):
-    query = """
+def add_reputation_answer(cursor, points, answer_id):
+    user_id_query = """ SELECT user_id FROM answer where id = %(answer_id)s"""
+    cursor.execute(user_id_query, {'question_id': answer_id})
+    user_id = cursor.fetchone()['user_id']
+    reputation_add_query = """
+                       UPDATE users
+                       SET reputation = reputation + %(points)s
+                       WHERE users.id = %(user_id)s
+                   """
+    arguments = {'points': points, 'user_id': user_id}
+    cursor.execute(reputation_add_query, arguments)
+
+
+@connection.connection_handler
+def add_reputation_question(cursor, points, question_id):
+    user_id_query = """ SELECT user_id FROM question where id = %(question_id)s"""
+    cursor.execute(user_id_query, {'question_id': question_id})
+    user_id = cursor.fetchone()['user_id']
+    reputation_add_query = """
                     UPDATE users
                     SET reputation = reputation + %(points)s
                     WHERE users.id = %(user_id)s
                 """
     arguments = {'points': points, 'user_id': user_id}
-    cursor.execute(query, arguments)
-    return cursor.fetchall()
+    cursor.execute(reputation_add_query, arguments)
 
 
 @connection.connection_handler
@@ -535,3 +559,14 @@ def number_of_comments(cursor, user_id):
     """
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def accepting_the_answer(cursor, answer_id):
+    add_reputation_answer(15,answer_id)
+    query = f"""UPDATE answer
+                SET is_accept = true
+                WHERE id = '{answer_id}'
+             """
+    cursor.execute(query)
+
