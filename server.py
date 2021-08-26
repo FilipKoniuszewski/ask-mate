@@ -89,11 +89,10 @@ def edit_answer(answer_id):
 def question_page(question_id):
     tags = data_manager.get_tags_by_quest_id(question_id)
     question = data_manager.get_question_by_id(question_id)
-    # question["submission_time"] = (str(question["submission_time"]))[:10]
+    question["submission_time"] = (str(question["submission_time"]))[:10]
     list_of_answers = data_manager.get_answers(question_id)
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
-        # pass
     comments_to_question = data_manager.get_comments(question_id)
     for element in comments_to_question:
         element['email'] = element['email'].split('@')[0]
