@@ -41,10 +41,11 @@ def main_page():
 def search():
     phrase = request.args.get('phrase')
     list_of_questions_with_phrase = data_manager.search_for_phrase_in_questions(phrase)
+    tags = data_manager.get_name_tags_of_specific_questions()
     for questions in list_of_questions_with_phrase:
         questions["title"] = util.highlight(phrase, questions["title"])
         questions["message"] = util.highlight(phrase, questions["message"])
-    return render_template("main_page.html", list=list_of_questions_with_phrase)
+    return render_template("main_page.html", list=list_of_questions_with_phrase, tags=tags)
 
 
 @app.route("/add-question", methods=["POST", "GET"])
@@ -88,10 +89,11 @@ def edit_answer(answer_id):
 def question_page(question_id):
     tags = data_manager.get_tags_by_quest_id(question_id)
     question = data_manager.get_question_by_id(question_id)
-    question["submission_time"] = (str(question["submission_time"]))[:10]
+    # question["submission_time"] = (str(question["submission_time"]))[:10]
     list_of_answers = data_manager.get_answers(question_id)
     for element in list_of_answers:
         element["submission_time"] = (str(element["submission_time"]))[:10]
+        # pass
     comments_to_question = data_manager.get_comments(question_id)
     for element in comments_to_question:
         element['email'] = element['email'].split('@')[0]

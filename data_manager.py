@@ -66,10 +66,11 @@ def edit_question(cursor, title, message, image, question_id):
         message = %(message)s
     """
     if image != "":
-        query += ",image = %(image)s"
+        query += ",image = %(image)s "
     else:
-        query += ",image = null"
+        query += ",image = null "
     query += " WHERE id = %(question_id)s"
+    print(query)
     arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
     cursor.execute(query, arguments)
 
@@ -86,7 +87,7 @@ def edit_question(cursor, title, message, image, question_id):
         query += ",image = %(image)s"
     else:
         query += ",image = null"
-    query += "WHERE id = %(question_id)s"
+    query += " WHERE id = %(question_id)s"
     arguments = {'title': title, 'message': message, 'image': image, 'question_id': question_id}
     cursor.execute(query, arguments)
 
@@ -97,7 +98,7 @@ def get_answers(cursor, question_id):
             SELECT *
             FROM answer
             WHERE question_id=%(question_id)s
-            ORDER BY id
+            ORDER BY is_accept, vote_number DESC
         """
     arguments = {"question_id": question_id}
     cursor.execute(query, arguments)
@@ -124,7 +125,7 @@ def add_answer(cursor, question_id, message, image, user_id):
     if image == "":
         query += ",null)"
     else:
-        query += ",%(image)s"
+        query += ",%(image)s)"
     arguments = {'question_id': question_id, 'message': message, 'user_id': user_id, 'image': image}
     cursor.execute(query, arguments)
 
@@ -296,12 +297,12 @@ def get_comments(cursor, question_id):
     return cursor.fetchall()
 
 
-
 @connection.connection_handler
 def search_for_phrase_in_questions(cursor, phrase):
     query = f"""
-                SELECT DISTINCT question.*
+                SELECT DISTINCT question.*, users.email
                 FROM question LEFT JOIN answer ON question.id = answer.question_id
+                LEFT JOIN users on question.user_id = users.id
                 WHERE LOWER(answer.message) LIKE LOWER('%{phrase}%') or 
                 LOWER(question.title) LIKE LOWER('%{phrase}%') or LOWER(question.message) LIKE LOWER('%{phrase}%')
             """
@@ -564,7 +565,7 @@ def number_of_comments(cursor, user_id):
 
 @connection.connection_handler
 def accepting_the_answer(cursor, answer_id):
-    add_reputation_answer(15,answer_id)
+    add_reputation_answer(15, answer_id)
     query = f"""UPDATE answer
                 SET is_accept = true
                 WHERE id = '{answer_id}'
