@@ -23,7 +23,7 @@ estimate these new stories as well, and, based on the estimations, decide how ma
 your team can finish until the demo. As the order is important, you choose
 from the beginning of the list as much as you can.
 
-## What have we learnt?
+## What have we learned?
 
 - Web routing and redirects
 - Gitflow workflow
