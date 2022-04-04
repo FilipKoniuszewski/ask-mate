@@ -1,5 +1,7 @@
 # AskMate (sprint 3)
 
+- Codecool Project
+
 ## Story
 
 Last week you made great progress improving your web application.
