@@ -37,6 +37,6 @@ from the beginning of the list as much as you can.
 - [Marcin Żyła](https://github.com/marcinZyla13)
 - [Jakub Młocek](https://github.com/mlocekjakub)
 
-<img src="https://user-images.githubusercontent.com/82803009/161569273-41c92360-b0b0-4c2a-8ada-7be93cb15dc0.png">
+<img src="https://user-images.githubusercontent.com/82803009/161569273-41c92360-b0b0-4c2a-8ada-7be93cb15dc0.png" height="200" >
 
 
